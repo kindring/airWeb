@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="w-full h-auto lg:h-full bg-blue-300">
-        <router-view></router-view>
+        <routers-view></routers-view>
       </div>
     </div>
   </div>
@@ -133,16 +133,16 @@ export default {
       this.pageName = pageString;
       switch (pageString){
         case 'photo':
-          this.$router.push('/camera/photo');
+          this.$routers.push('/camera/photo');
           break;
         case 'video':
-          this.$router.push('/camera/video');
+          this.$routers.push('/camera/video');
           break;
         case 'live':
-          this.$router.push('/camera/live');
+          this.$routers.push('/camera/live');
           break;
         case 'index':
-          this.$router.push('/camera');
+          this.$routers.push('/camera');
           break;
       }
     },

@@ -1,12 +1,41 @@
 <template>
   <div class="w-full flex justify-center ">
+    首页1
     <!--      轮播,广告-->
-    <div class="banner h-48">
+    <div class="banner h-56">
 <!--      轮播图片,通过show切换-->
-      <img src="" alt="">
+      <div
+          v-for="(item,i) in banners"
+          :key="'img-'+item.id"
+          :class="{
+        'banner-show-now':i==bannerIndex
+        }"
+      >
+        <img :src="item.url" alt="">
+        <div class="viewText">
+          <div class="title">{{item.title}}</div>
+          <div class="content">
+            {{item.text}}
+          </div>
+        </div>
+        <a>
+
+        </a>
+      </div>
+
+
 <!--      点击切换控制 -->
       <div class="banner-control">
-        <div class="banner-handle"></div>
+        <div
+             v-for="(item,i) in banners"
+             :key="'handle-'+item.id"
+             :class="{
+               'banner-handle':true,
+               'banner-handle-now':i==bannerIndex
+               }"
+        >
+
+        </div>
       </div>
     </div>
 <!--    -->
@@ -25,7 +54,26 @@ export default {
   name: "airHome",
   data(){
     return {
-
+      banners:[{
+        id: '1',
+        url:'http://',
+        title: '特价机票',
+        text: '很长一段文字',
+        img:''
+      },{
+        id: '2',
+        url:'http://',
+        title: '马尔代夫一日游',
+        text: '很长一段文字',
+        img:''
+      },{
+        id: '3',
+        url:'http://',
+        title: '埃及之春',
+        text: '很长一段文字',
+        img:''
+      }],
+      bannerIndex:0
     }
   },
 
@@ -63,12 +111,16 @@ export default {
       height: 5px;
       border-radius: 2px;
       transition: all 0.6s;
-      margin: 0 2px;
+      margin: 0 5px;
+      cursor:pointer;
       background-color: rgba(178, 160, 160, 0.79);
+      &hover{
+        background-color: rgba(196, 167, 167, 0.79);
+      }
     }
     .banner-handle-now{
       width: 15px;
-      background-color: rgba(178, 170, 160, 0.79);
+      background-color: rgb(244,155,0)
     }
   }
 }

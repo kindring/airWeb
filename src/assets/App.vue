@@ -15,7 +15,7 @@
     >
       <div class="logo w-full" >
         {{nowSelectedMenuKeys}}
-        <router-link to="/"><img alt="logo" src="@/assets/logo.png"></router-link>
+        <routers-link to="/"><img alt="logo" src="@/assets/logo.png"></routers-link>
       </div>
       <a-menu  
       mode="inline"
@@ -31,11 +31,11 @@
     </a-layout-sider>
     <a-layout class="h-full flex">
       <a-layout-content class="w-11/12 mx-auto overflow-hidden flex flex-col">
-        <router-nav class="mt-2"></router-nav>
+        <routers-nav class="mt-2"></routers-nav>
         <div class="w-full h-full relative flex items-center overflow-y-auto flex-col mt-3">
           <!-- 页面布局 -->
           <content-view>
-            <router-view/>
+            <routers-view/>
           </content-view>
         </div>
         <footer class="py-1">
@@ -52,7 +52,7 @@ import contentView from '@components/content/content.vue'
 import sidebarMenuItem from '@components/sidebars/sidebarMenuItem.vue'
 
 import routerNav from '@components/nav/routerNav.vue'
-import Router from './router/routers';
+import Router from './routers/routers';
 import {mapState,mapMutations,mapActions} from 'vuex';
 import types from './store/types.js'
 import {onBeforeMount} from "vue";
@@ -100,7 +100,7 @@ export default {
       console.log('error      ---')
       console.error(err)
     })
-    this.$router.afterEach(()=>{
+    this.$routers.afterEach(()=>{
       // console.log(this.$route.path)
       // console.log(this.$route)
       this.setSidebarMenu()
