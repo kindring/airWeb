@@ -693,6 +693,16 @@ module.exports = {
             1: '1',
             2: '2',
         },
+        textIndent: {
+            1:'0.25em',
+            2:'0.5em',
+            3:'0.75em',
+            4:'1em',
+            5:'1.25em',
+            6:'1.5em',
+            7:'1.75em',
+            8:'2em',
+        },
         textColor: (theme) => theme('colors'),
         textOpacity: (theme) => theme('opacity'),
         transformOrigin: {

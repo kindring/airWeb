@@ -1,13 +1,14 @@
 <template>
   <div class="w-full">
 <!--    logo部分布局 -->
-    <div class="w-full flex justify-center h-36">
-      <div class="w-p1200 ">
+    <div class="w-full flex justify-center h-24">
+      <div class="w-p1200 flex items-center">
         <div class="logo">
           <a href="/">
-            <img src="public/logo.png" alt="机票预定">
+            <img :src="logoUrl" alt="机票预定">
           </a>
         </div>
+        <h1 class="text-3xl mt-2">极速,互联,稳定,便捷</h1>
       </div>
     </div>
 
@@ -34,6 +35,7 @@ export default {
   name: "layout_header",
   data:()=>{
     return {
+      logoUrl: process.env.BASE_URL+'image/logo.jpg',
       menuList:[
         {
           id:1,
@@ -74,7 +76,7 @@ export default {
 
 <style scoped lang="scss">
 .logo{
-  height: 120px;
+  height: 100%;
   img{
     height: 100%;
     width: auto;
