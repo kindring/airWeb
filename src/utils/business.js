@@ -12,7 +12,11 @@ function registerHandle(rcode,handle){
 function toLogin(){
     let nowUrl = window.location.href;
     window.sessionStorage.setItem('lastUrl',nowUrl);
-    window.location.href = '/login';
+    // 刷新页面
+    setTimeout(()=>{
+        window.location.reload();
+        // window.location.href = '/login';
+    },3000)
 }
 
 /**
