@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-08-31 15:03:41
  * @LastEditors: kindring
  * @Description: In User Settings Edit
- * @FilePath: \web_camera\src\App.vue
+ * @FilePath: \web_camera\src\adminLoginApp.vue
 -->
 <template>
   <a-layout id="components-layout-demo-responsive" class="h-full">

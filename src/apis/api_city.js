@@ -6,13 +6,25 @@ import  axios from './axios';
  * @param url
  * @returns {*|Promise<AxiosResponse<any>>}
  */
-function getCitys(cityType,url = `/api/citys`){
-    url += `?city=cityType`
+function getCitys(cityType,url = `/api/city/list`){
+    url += `?type=${cityType}`
     return axios.get(url);
 }
 
+/**
+ * 新增城市
+ * @param cityType
+ * @param cityName
+ * @param url
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+function addCity(cityType,cityName,url='/api/city/add'){
+    return axios.post(url,{cityType:cityType,cityName:cityName});
+}
+
 export default {
-    getCitys
+    getCitys,
+    addCity
 }
 
 

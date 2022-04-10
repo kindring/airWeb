@@ -7,9 +7,9 @@
  * @LastEditTime: 2021-08-31 15:03:03
  */
 import axios from 'axios'
-import App from '@/App';
+import Vue from 'vue';
 // 加载app
-console.log(App)
+// console.log(Vue)
 axios.interceptors.request.use(config => {
     config.headers.withCredentials = true;
     // App.$message.info('test')

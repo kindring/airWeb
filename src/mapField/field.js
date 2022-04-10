@@ -13,6 +13,8 @@ export default {
     routeType_domestic:1,
     // 国际航班
     routeType_international:2,
+    // 全部城市,默认类型
+    cityType_default: 0,
     // 国内城市
     cityType_domestic:1,
     // 国际城市

@@ -8,25 +8,20 @@
 -->
 <template>
   <div class="w-full">
-    <!--    顶部导航栏-->
-    <Layout_header></Layout_header>
-    <!--    中间内容框-->
-    <router-view></router-view>
-    <!--    底部信息框-->
-    <layout_footer></layout_footer>
-
+    <!--    侧边导航蓝-->
+    <layout>
+      <router-view></router-view>
+    </layout>
   </div>
 </template>
 
 <script>
-import Layout_header from "../../components/index/layout_header";
-import layout_footer from "../../components/index/layout_footer";
+import layout from "@/components/admin/layout";
 // import apis from '@/apis/index'
 export default {
   name: 'App',
   components: {
-    layout_footer,
-    Layout_header
+    layout
     // HelloWorld,
     // bigScreen
   },
@@ -50,9 +45,8 @@ export default {
 </script>
 
 <style>
-body{
-  margin: 0;
-  padding: 0;
+body,html{
+  width: 100%;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -66,4 +60,5 @@ body{
   margin: 0;
   padding: 0;
 }
+
 </style>

@@ -16,7 +16,8 @@ export default {
         }
         context.commit(types.mutations.setCitys,{
             type: cityType,
-            array: res
+            array: res.data
         });
+        return true;
     }
 }

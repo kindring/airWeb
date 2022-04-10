@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-11-22 17:08:53
  * @LastEditors: kindring
  * @Description: 用户登陆页面
- * @FilePath: \web_camera\src\App.vue
+ * @FilePath: \web_camera\src\adminLoginApp.vue
 -->
 <template>
   <div class="w-screen h-screen flex flex-col">

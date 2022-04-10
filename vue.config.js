@@ -13,6 +13,16 @@ const c = {
             ws: true,
             changeOrigin: true,
         },
+          '/admin/login':{
+              target: 'http://127.0.0.1:8181/',
+              ws: true,
+              changeOrigin: true,
+          },
+          '/admin/logout':{
+              target: 'http://127.0.0.1:8181/',
+              ws: true,
+              changeOrigin: true,
+          },
         '/public':{
             target: 'http://127.0.0.1:8181/',
             ws: true,
@@ -26,11 +36,17 @@ const c = {
           template: 'public/index.html',
           filename: 'index.html'
       },
-        // login: {
-        //     entry: 'src/pages/login/main.js',
-        //     template: 'public/index.html',
-        //     filename: 'login.html'
-        // },
+        //
+    alogin: {
+        entry: 'src/pages/adminLogin/main.js',
+        template: 'public/index.html',
+        filename: 'alogin.html'
+    },
+        admin: {
+            entry: 'src/pages/admin/main.js',
+            template: 'public/index.html',
+            filename: 'admin.html'
+        },
     },
     configureWebpack: {
         resolve: {
