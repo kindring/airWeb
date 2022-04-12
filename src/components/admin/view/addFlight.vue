@@ -1,8 +1,8 @@
 <template>
   <div class="w-full">
-    <round-title>新增城市</round-title>
+    <round-title>添加航班</round-title>
     <table-layout >
-      <template #header>请输入城市信息</template>
+      <template #header>请输入航班信息</template>
       <a-form-model
           class="relative"
           ref="ruleForm"

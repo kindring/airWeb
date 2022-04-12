@@ -22,9 +22,14 @@ function addCity(cityType,cityName,url='/api/city/add'){
     return axios.post(url,{cityType:cityType,cityName:cityName});
 }
 
+function changeCity(cityId,cityType,cityName,url='/api/city/change'){
+    return axios.post(url,{cityId:cityId,cityType:cityType,cityName:cityName});
+}
+
 export default {
     getCitys,
-    addCity
+    addCity,
+    changeCity
 }
 
 

@@ -31,12 +31,72 @@
         <template slot="cityType" slot-scope="text">
           <div :class="`p-2 rounded bg-${text==domesticType?'blue':'green'}-300`">{{text==domesticType?'国内':'国际'}}</div>
         </template>
+
         <template class="flex justify-center" slot="operation" slot-scope="text,record">
           <a-button @click="editCity(text,record)" type="primary">编辑城市</a-button>
         </template>
       </a-table>
     </table-layout>
+<!--    弹窗组件,弹窗修改城市信息 -->
+    <pop :show="editPopShow" :loading="editLoading">
+      <a-card title="编辑城市信息" :bordered="false" class="w-96">
+        <a-form-model
+            class="relative"
+            ref="ruleForm"
+            :model="form"
+            :rules="rules"
+            :label-col="labelCol"
+            :wrapper-col="wrapperCol"
+        >
+          <!--            城市名-->
+          <a-form-model-item
+              class="mt-6"
+              ref="cityName"
+              label="城市名"
+              has-feedback
+              prop="cityName">
+            <a-input
+                class="w-full"
+                v-model="form.cityName"
+                placeholder="请输入城市名"
+                @blur="
+                  () => {
+                    $refs.cityName.onFieldBlur();
+                  }
+                "
+            />
+          </a-form-model-item>
+          <!--            城市类型-->
+          <a-form-model-item
+              class="mt-2"
+              ref="cityType"
+              label="城市类型"
+              has-feedback
+              prop="cityType">
+            <table-select
+                class="w-48"
+                :options="formCityTypes"
+                v-model="form.cityType"
+                keystr="cityType">
+            </table-select>
+          </a-form-model-item>
 
+          <!--             提交按钮            -->
+          <a-row class="mt-10">
+            <a-col :span="labelCol.span">
+
+            </a-col>
+            <a-col>
+              <a-button-group>
+                <a-button @click="hideEditPop">取消修改</a-button>
+                <a-button type="primary" @click="submitHandle">修改城市</a-button>
+              </a-button-group>
+            </a-col>
+          </a-row>
+
+        </a-form-model>
+      </a-card>
+    </pop>
   </div>
 </template>
 
@@ -48,9 +108,14 @@ import TableSelect from "@components/admin/components/tableSelect";
 import {mapActions, mapState} from "vuex";
 import types from "@/store/adminTypes";
 import field from "@/mapField/field";
+import Pop from "@components/public/pop";
+import handle from "@/utils/handle";
+import api_city from "@/apis/api_city";
+import business from "@/utils/business";
 export default {
   name: "citys",
   components: {
+    Pop,
     TableSelect,
     TableLayout,
     RoundTitle,
@@ -77,6 +142,35 @@ export default {
       showCitys: [],
       // 加载城市
       loading: true,
+      // 修改城市弹窗部分
+      editPopShow: false,
+      editLoading: true,
+      editChangeLock: true,
+      labelCol: { span: 6 },
+      wrapperCol: { span: 16 },
+      form: {
+        cityId: '',
+        cityName: '',
+        cityType: fields.cityType_domestic,
+      },
+      formCityTypes:[
+        {
+          text:'国内城市',
+          value: fields.cityType_domestic
+        },
+        {
+          text:'国际城市',
+          value: fields.cityType_international
+        }
+      ],
+      rules: {
+        cityName: [
+          {required: 'true',message: '请输入城市名称'},
+        ],
+        cityType: [
+          {required:'true',message:'请选择城市类型'}
+        ],
+      }
     }
   },
 
@@ -135,18 +229,49 @@ export default {
         this.showCitys = [...this.internationalCitys,...this.domesticCitys];
       }
     },
-    changeCityType(cityType){
-      console.log(cityType)
-      if(this.showCityType == cityType){
-        return this.$message.info('未修改城市类型');
-      }
-      // 移除关键字符
-      console.log(cityType)
-    },
 
-    editCity(text){
+    editCity(text,record){
       // 城市id
-    }
+      this.editPopShow = true;
+      this.editLoading = false;
+      this.form.cityId = record.id;
+      this.form.cityName = record.cityName;
+      this.form.cityType =  record.cityType;
+      // console.log(record);
+    },
+    // 取消修改城市
+    hideEditPop(){
+      this.editPopShow = false;
+      this.editLoading = true;
+      this.form.cityId = '';
+      this.form.cityName = '';
+      this.form.cityType = '';
+    },
+    // 重置表单
+    resetForm(){
+      this.form.cityName = '';
+      this.form.cityType = fields.cityType_domestic;
+    },
+    async submitHandle(e) {
+      let cityId = this.form.cityId;
+      let cityName = this.form.cityName;
+      let cityType = this.form.cityType;
+      this.editLoading = true;
+      let [err,response] = await handle(api_city.changeCity(cityId,cityType,cityName));
+      console.log(response);
+      let rcodeMean = business.checkResponseRcode(response,err);
+      if(rcodeMean.ok){
+        // 登陆成功
+        this.$message.success(`修改城市成功`);
+        this.showCityType = cityType;
+        this.editPopShow = false;
+        await this.search();
+      }else{
+        this.$message.error('修改城市失败')
+        this.$message[rcodeMean.type](rcodeMean.msg);
+      }
+      this.editLoading = false;
+    },
   }
 }
 </script>

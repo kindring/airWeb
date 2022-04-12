@@ -69,6 +69,9 @@ function checkResponseRcode(response,err){
         case 7:
             res.msg = '服务器操作超时';
             break;
+        case 8:
+            res.msg = '账号或者密码错误';
+            break;
         default:
             res.msg = '未受支持的rcode码';
             break;
