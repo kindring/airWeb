@@ -65,11 +65,11 @@ export default {
         },
         {
           text:'活动中心',
-          router: '/recommend',
+          router: '/recommends',
           child:[
               {
                 text:'新增推荐',
-                router: '/',
+                router: '/addRecommend',
               },
           ]},
         {

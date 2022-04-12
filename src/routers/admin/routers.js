@@ -2,7 +2,7 @@
 import index from '../../components/admin/view/index'
 import citys from '../../components/admin/view/citys.vue';
 import addCity from "@components/admin/view/addCity";
-
+import addRecommend from "@components/admin/view/addRcommend.vue";
 import logout from '@/components/admin/view/logout'
 const routers = [{
     id: '/',
@@ -29,6 +29,15 @@ const routers = [{
     meta:{title:"城市管理"},
     component: addCity,
 },
+    {
+        id: '/addRecommend',
+        text: '新增推荐',
+        is_menu: true,
+        path: '/addRecommend',
+        name: '新增推荐',
+        meta:{title:"新增推荐"},
+        component: addRecommend,
+    },
     {
         id: '/logout',
         text: '退出登陆',
