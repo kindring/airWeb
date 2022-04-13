@@ -4,30 +4,28 @@ let flightColumn = [
         {
             title: 'id',
             dataIndex: 'id',
-            key: 'id',
         },
         {
-            title: '航班名',
-            dataIndex: 'orignalPrice',
-        },
-        {
-            title: '飞机代号',
-            dataIndex: 'orignalPrice',
+            title: '航班代号',
+            customRender: (text,recover)=>{
+                console.log(recover);
+                return `${recover.flightName}-${recover.airCode}`
+            }
         },
         {
             title: '出发城市',
-            dataIndex: 'departureCity',
+            dataIndex: 'departureCityName',
         },
         {
             title: '目标城市',
-            dataIndex: 'targetCity',
+            dataIndex: 'targetCityName',
         },
         {
             title: '起航时间',
             dataIndex: 'sailingTime',
             customRender: (unixTime)=>{
                 unixTime = (unixTime - 0)*1000
-                time.dateFormat(new Date(unixTime))
+                return time.dateFormat(new Date(unixTime))
             }
         },
         {
@@ -35,12 +33,12 @@ let flightColumn = [
             dataIndex: 'langdinTime',
             customRender: (unixTime)=>{
                 unixTime = (unixTime - 0)*1000
-                time.dateFormat(new Date(unixTime))
+                return time.dateFormat(new Date(unixTime))
             }
         },
         {
             title: '操作',
-            dataIndex: 'id',
+            // dataIndex: 'id',
             scopedSlots: { customRender: 'operation' },
         },
 ]

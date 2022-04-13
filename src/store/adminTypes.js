@@ -1,6 +1,8 @@
 import citys from './citys/type'
+import flights from "./flight/type";
 const typeModule = {
-    citys
+    citys,
+    flights
 }
 // // 获取 mutations
 // function getMutations(_module,_type){

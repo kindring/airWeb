@@ -3,6 +3,8 @@ import index from '../../components/admin/view/index'
 import citys from '../../components/admin/view/citys.vue';
 import addCity from "@components/admin/view/addCity";
 import addRecommend from "@components/admin/view/addRcommend.vue";
+import flights from '@components/admin/view/flights'
+import addFlight from '@components/admin/view/addFlight'
 import logout from '@/components/admin/view/logout'
 const routers = [{
     id: '/',
@@ -29,6 +31,33 @@ const routers = [{
     meta:{title:"城市管理"},
     component: addCity,
 },
+    {
+        id: '/flights',
+        text: '航班列表',
+        is_menu: true,
+        path: '/flights',
+        name: '航班列表',
+        meta:{title:"航班列表"},
+        component: flights,
+    },
+    {
+        id: '/addFlight',
+        text: '新增航班',
+        is_menu: true,
+        path: '/addFlight',
+        name: '新增航班',
+        meta:{title:"新增航班"},
+        component: addFlight,
+    },
+    {
+        id: '/editFlight',
+        text: '修改航班',
+        is_menu: true,
+        path: '/editFlight',
+        name: '新增航班',
+        meta:{title:"新增航班"},
+        component: addFlight,
+    },
     {
         id: '/addRecommend',
         text: '新增推荐',

@@ -7,13 +7,14 @@ import api_flights from "@/apis/api_flight";
 
 export default {
     [types.actions.loadFlights]:  async(context,searchOption)=>{
-        // 加载图片
+        // 加载航班
         let [err,response] = await handle(api_flights.flightList());
         let {ok,msg,res} = business.checkResponseRcode(response,err);
         if(!ok){
             this.msg = msg;
             return false;
         }
+
         context.commit(types.mutations.setFlights,res.data);
         return true;
     }

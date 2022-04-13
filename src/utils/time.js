@@ -12,7 +12,7 @@
  * @param {*} format 需要转换的格式 YYYY 年 MM月 DD 日 H小时 m分钟 s秒
  * @returns
  */
-function dateFormat(date, format = 'YYYY-MM-DD H:m:s') {
+function dateFormat(date, format = 'YY-MM-DD H:m:s') {
     format = format.toLocaleUpperCase();
     const config = {
         YY: date.getFullYear(),

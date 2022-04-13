@@ -12,12 +12,13 @@ Vue.use(Vuex)
 const { Store } = Vuex
 
 import citys from './citys'
-
+import flights from './flight'
 
 const store = new Store({
     modules: {
         namespaced: true,
         citys,
+        flights
     }
 });
 

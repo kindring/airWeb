@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <round-title>添加航班</round-title>
+    <round-title>{{ pageText }}</round-title>
     <table-layout >
       <template #header>请输入航班信息</template>
       <a-form-model
@@ -11,37 +11,142 @@
           :label-col="labelCol"
           :wrapper-col="wrapperCol"
       >
-        <!--            城市名-->
+        <!--            航班名-->
         <a-form-model-item
             class="mt-6"
-            ref="cityName"
-            label="城市名"
+            ref="flightName"
+            label="航班名"
             has-feedback
-            prop="cityName">
+            prop="flightName">
           <a-input
               class="w-full"
-              v-model="form.cityName"
-              placeholder="请输入城市名"
+              v-model="form.flightName"
+              placeholder="请输入航班名"
               @blur="
                   () => {
-                    $refs.cityName.onFieldBlur();
+                    $refs.flightName.onFieldBlur();
                   }
                 "
           />
         </a-form-model-item>
-        <!--            用户密码-->
+        <!--            飞机代号-->
+        <a-form-model-item
+            class="mt-6"
+            ref="airCode"
+            label="飞机代号"
+            has-feedback
+            prop="airCode">
+          <a-input
+              class="w-full"
+              v-model="form.airCode"
+              placeholder="请输入飞机代号"
+              @blur="
+                  () => {
+                    $refs.airCode.onFieldBlur();
+                  }
+                "
+          />
+        </a-form-model-item>
+
+        <!--            价格-->
         <a-form-model-item
             class="mt-2"
-            ref="cityType"
-            label="城市类型"
+            ref="originalPrice"
+            label="机票原价"
             has-feedback
-            prop="cityType">
-          <table-select
-              class="w-48"
-              :options="cityTypes"
-              v-model="form.cityType"
-              keystr="cityType">
-          </table-select>
+            prop="originalPrice">
+          <a-input-number
+              class="w-full"
+              :default-value="1000"
+              :min="0"
+              :max="99999"
+              step="0.01"
+              :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+              :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+              v-model="form.originalPrice"
+          />
+        </a-form-model-item>
+
+        <!--            优惠价格-->
+        <a-form-model-item
+            class="mt-2"
+            ref="currentPrice"
+            label="当前价格"
+            has-feedback
+            prop="currentPrice">
+          <a-input-number
+              class="w-full"
+              :default-value="1000"
+              :min="0"
+              :max="99999"
+              step="0.01"
+              :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+              :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+              v-model="form.currentPrice"
+          />
+        </a-form-model-item>
+
+        <!--            起始时间-->
+        <a-form-model-item
+            class="mt-2"
+            ref="currentPrice"
+            label="起始时间"
+            has-feedback
+            prop="currentPrice">
+          <a-range-picker
+              :disabled-date="disabledDate"
+              :disabled-time="disabledRangeTime"
+              :show-time="{
+                hideDisabledOptions: true,
+                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+              }"
+              v-model="form.times"
+              format="YYYY-MM-DD HH:mm:ss"
+          />
+        </a-form-model-item>
+
+        <!--            起始城市-->
+        <a-form-model-item
+            class="mt-2"
+            ref="currentPrice"
+            label="起始城市"
+            has-feedback
+            prop="currentPrice">
+          <div class="flex items-center">
+<!--            出发城市-->
+            <a-switch class="mt-4"
+                      checked-children="国内"
+                      un-checked-children="国际"
+                      v-model="departureTypeIsDomestic"
+                      default-checked
+                      @change="cityTypeChange"
+            />
+            <div class=" w-48">
+              <table-select
+                  class="w-24"
+                  :options="departureOptions"
+                  v-model="form.departureCity"
+                  keystr="departureCity">
+              </table-select>
+            </div>
+
+            <div class="w-8 text-center">-</div>
+<!--            目标城市-->
+            <a-switch class="mt-4"
+                      checked-children="国内"
+                      un-checked-children="国际"
+                      v-model="targetTypeIsDomestic"
+                       />
+            <div class=" w-48">
+              <table-select
+                  class="w-24"
+                  :options="targetOptions"
+                  v-model="form.targetCity"
+                  @change="cityTypeChange"
+                  keystr="targetCity">
+              </table-select>
+            </div>
+          </div>
         </a-form-model-item>
 
         <!--             提交按钮            -->
@@ -51,8 +156,15 @@
           </a-col>
           <a-col>
             <a-button-group>
-              <a-button @click="resetForm">重置</a-button>
-              <a-button type="primary" @click="submitHandle">增加城市</a-button>
+              <a-button >
+                <router-link
+                    to="/flights"
+                    v-if="flightId"
+                    type="danger"
+                >取消</router-link>
+              </a-button>
+              <a-button @click="resetForm" v-if="!flightId">重置</a-button>
+              <a-button type="primary" @click="submitHandle">{{ flightId?'修改航班':'增加航班' }}</a-button>
             </a-button-group>
           </a-col>
         </a-row>
@@ -63,6 +175,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import RoundTitle from "@components/public/roundTitle";
 import tableLayout from "@components/admin/components/tableLayout";
 import fields from '@/mapField/field'
@@ -71,16 +184,38 @@ import handle from "@/utils/handle";
 import userApi from "@/apis/api_user";
 import business from "@/utils/business";
 import api_city from "@/apis/api_city";
+import {mapActions, mapState} from "vuex";
+import types from "@/store/adminTypes";
 export default {
-  name: "addCity",
-  components: {TableSelect, tableLayout, RoundTitle},
+  name: "addFlight",
+  components: {
+    TableSelect,
+    // TableSelect,
+    tableLayout, RoundTitle},
   data(){
     return {
+      pageText: '新增航班',
+      isAdd: true,
+      flightId: null,
       labelCol: { span: 4 },
       wrapperCol: { span: 16 },
       form: {
-        cityName: '',
-        cityType: fields.cityType_domestic,
+        flightName: '',
+        airCode: '',
+        originalPrice: 0,
+        currentPrice: 0,
+        times:[
+          moment(1649870807*1000),
+          '',
+        ],
+        sailingTime: '',
+        langdinTime: '',
+        // 票数
+        totalVotes: 0,
+        // 出发城市
+        departureCity: '',
+        // 目标城市
+        targetCity:'',
       },
       cityTypes:[
         {
@@ -99,14 +234,124 @@ export default {
         cityType: [
           {required:'true',message:'请选择城市类型'}
         ],
-      }
+      },
+
+      domesticCityOption: [],
+      internationalCityOption: [],
+      // 出发城市可选项
+      departureOptions: [],
+      // 目标城市可选项
+      targetOptions: [],
+      // 出发城市可选项类型
+      departureTypeIsDomestic: true,
+      // 目标城市可选类型
+      targetTypeIsDomestic: true,
+
     }
   },
+  computed:{
+    ...mapState({
+      // 国内城市
+      domesticCitys: state=>state.citys[types.citys.state.domestic],
+      // 国际城市
+      internationalCitys: state=>state.citys[types.citys.state.international],
+    }),
+  },
+  async mounted(){
+    console.log(this.$route.query);
+    if(this.$route.query&&this.$route.query.flightId){
+      this.flightId = this.$route.query.flightId;
+      this.pageText = '编辑航班信息';
+    }else{
+      this.resetForm();
+    }
+    await this.loadCityList();
+    this.cityTypeChange();
+  },
   methods:{
+    ...mapActions({
+      loadCitys: types.citys.actions.loadCity,
+    }),
+    // 时间选择框部分
+    moment,
+    range(start, end) {
+      const result = [];
+      for (let i = start; i < end; i++) {
+        result.push(i);
+      }
+      return result;
+    },
+    disabledDate(current) {
+      // Can not select days before today and today
+      return current && current < moment().endOf('day');
+    },
+    disabledRangeTime(_, type) {
+      if (type === 'start') {
+        return {
+          disabledHours: () => this.range(0, 60).splice(4, 20),
+          disabledMinutes: () => this.range(30, 60),
+          disabledSeconds: () => [55, 56],
+        };
+      }
+      return {
+        disabledHours: () => this.range(0, 60).splice(20, 4),
+        disabledMinutes: () => this.range(0, 31),
+        disabledSeconds: () => [55, 56],
+      };
+    },
+
+    // 直接按照类型进行切换出发和结束城市
+    cityTypeChange(){
+      // 根据内容修改数据
+      if(this.departureTypeIsDomestic){
+        this.departureOptions = this.domesticCityOption;
+      }else{
+        this.departureOptions = this.internationalCityOption;
+      }
+      this.form.departureCity = this.departureOptions[0].id;
+      // 根据内容修改数据
+      if(this.targetTypeIsDomestic){
+        this.targetOptions = this.domesticCityOption;
+      }else{
+        this.targetOptions = this.internationalCityOption;
+      }
+      this.form.targetCity = this.targetOptions[0].id;
+
+    },
+    // 加载表单
+    async loadCityList(){
+
+      await this.loadCitys({cityType:fields.cityType_domestic,load:true});
+      await this.loadCitys({cityType:fields.cityType_international,load:true});
+      // 转换为options的数据结构
+      this.domesticCitys.forEach(val=>{
+        this.domesticCityOption.push({
+          value:val.id,
+          text: val.cityName
+        });
+      });
+      // 转换为options的数据结构
+      this.internationalCitys.forEach(val=>{
+        console.log(val);
+        this.internationalCityOption.push({
+          value:val.id,
+          text: val.cityName
+        });
+      })
+    },
     // 重置表单
     resetForm(){
-      this.form.cityName = '';
-      this.form.cityType = fields.cityType_domestic;
+      if (this.flightId){
+        return this.$message.warn('无法重置表单');
+      }
+      this.flightId = '';
+      this.form.flightName = '';
+      this.form.airCode = '';
+      this.form.departureCity = 0;
+      this.form.targetCity = 0;
+      this.form.times = [];
+      this.form.currentPrice = 0;
+      this.form.originalPrice = 0;
     },
     async submitHandle(e) {
       let cityName = this.form.cityName;
@@ -123,6 +368,14 @@ export default {
         this.$message.error('添加城市失败')
         this.$message[rcodeMean.type](rcodeMean.msg);
       }
+    },
+    // 新增航班数据获取
+    async addFlightSubmit(){
+
+    },
+    // 编辑航班数据编辑
+    async editFlightSubmit(){
+
     },
     // 新增成功
     countDown() {

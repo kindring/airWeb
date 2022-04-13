@@ -15,7 +15,7 @@
           </div>
 
           <a-button-group>
-            <a-button @click="search">查询</a-button>
+            <a-button @click="search()">查询</a-button>
             <a-button type="primary" >
               <router-link to="addCity">新增城市</router-link>
             </a-button>
@@ -185,7 +185,7 @@ export default {
   },
   mounted(){
     this.loading =false;
-    this.search();
+    this.search(true);
   },
   methods:{
 
@@ -193,27 +193,27 @@ export default {
       loadCity: types.citys.actions.loadCity,
     }),
     // 加载城市数据
-    async loadCitys(showCityType){
+    async loadCitys(showCityType,reload){
       this.loading = true;
-      let x = await this.loadCity(showCityType);
+      let x = await this.loadCity({cityType:showCityType,load:reload});
       this.loading =false;
     },
     // 筛选城市
-    async search(){
+    async search(load){
       if(this.loading){
         return this.$message.info('正在加载城市中');
       }
       if(this.showCityType == fields.cityType_default){
         // 加载所有城市
         if(!this.domesticCitys.length){
-          await this.loadCitys(fields.cityType_domestic)
+          await this.loadCitys(fields.cityType_domestic,load)
         }
         if(!this.internationalCitys.length){
-          await this.loadCitys(fields.cityType_international)
+          await this.loadCitys(fields.cityType_international,load)
         }
         this.$message.success('城市加载完成');
       }else{
-        await this.loadCitys(this.showCityType);
+        await this.loadCitys(this.showCityType,load);
       }
       this.showCitys = [];
       console.log(this.showCityType,fields.cityType_international)
