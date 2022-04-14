@@ -183,14 +183,13 @@ import TableSelect from "@components/admin/components/tableSelect";
 import handle from "@/utils/handle";
 import userApi from "@/apis/api_user";
 import business from "@/utils/business";
-import api_city from "@/apis/api_city";
+import api_flight from "@/apis/api_flight";
 import {mapActions, mapState} from "vuex";
 import types from "@/store/adminTypes";
 export default {
   name: "addFlight",
   components: {
     TableSelect,
-    // TableSelect,
     tableLayout, RoundTitle},
   data(){
     return {
@@ -339,6 +338,10 @@ export default {
         });
       })
     },
+    // 加载航班具体数据
+    async loadFlight(){
+
+    },
     // 重置表单
     resetForm(){
       if (this.flightId){
@@ -354,10 +357,26 @@ export default {
       this.form.originalPrice = 0;
     },
     async submitHandle(e) {
-      let cityName = this.form.cityName;
-      let cityType = this.form.cityType;
+      // 读取数据
+      let departure = this.form.departureCity,
+          target = this.form.targetCity,
+          times = this.form.times,
+          airCode = this.form.airCode,
+          flightName = this.form.flightName,
+          currentPrice = this.form.currentPrice,
+          originalPrice = this.form.originalPrice,
+          sailingTimeUnix = 0,
+          langdinTimeUnix = 0;
+
+      if (this.flightId){
+      //  修改航班
+
+      }else{
+        //  新增航班
+        this.addFlight();
+      }
       // console.log(cityName,cityType);
-      let [err,response] = await handle(api_city.addCity(cityType,cityName));
+      let [err,response] = await handle(api_flight.addCity());
       console.log(response);
       let rcodeMean = business.checkResponseRcode(response,err);
       if(rcodeMean.ok){

@@ -4,7 +4,7 @@
     <a-row type="flex" justify="space-around">
       <a-col :span="5">
         <round-title>
-          <router-link  class="h-72 flex justify-center items-center" to="/">首页</router-link>
+          <a class="h-72 flex justify-center items-center" href="/">首页</a>
         </round-title>
       </a-col>
       <a-col :span="5">
