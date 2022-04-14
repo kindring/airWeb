@@ -31,11 +31,11 @@
           <div class="overflow-hidden w-full h-full absolute">
             <div class="bg-block bg-blue-300">
               <div class="bg-block bg-yellow-200">
-                <div class="bg-block bg-block2  bg-blue-100"></div>
+                <div class="bg-block bg-block2  bg-red-100"></div>
               </div>
             </div>
           </div>
-          <div class="title relative  text-xl">air航班管理系统登录</div>
+          <div class="title relative  text-xl">Z_AIR航班网-登录</div>
           <a-form-model
               class="relative"
               ref="ruleForm"
@@ -54,7 +54,7 @@
               <a-input
                   class="w-full"
                   v-model="form.account"
-                  placeholder="管理员账户"
+                  placeholder="用户账户"
                   @blur="
                   () => {
                     $refs.account.onFieldBlur();
@@ -140,7 +140,7 @@ export default {
         captcha: '',
       },
       // 要切换的url地址
-      jumpUrl: '/admin',
+      jumpUrl: '/',
       rules: {
         account: [
           {required: 'true',message: '请输入用户名'}
@@ -175,7 +175,7 @@ export default {
       let passwd = this.form.password;
       let captcha = this.form.captcha;
       console.log(account,passwd,captcha);
-      let [err,response] = await handle(userApi.adminLogin(account,passwd,captcha));
+      let [err,response] = await handle(userApi.login(account,passwd,captcha));
       console.log(response);
       let rcodeMean = business.checkResponseRcode(response,err);
       if(rcodeMean.ok){

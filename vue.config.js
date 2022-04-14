@@ -23,6 +23,21 @@ const c = {
               ws: true,
               changeOrigin: true,
           },
+          '/user/login':{
+              target: 'http://127.0.0.1:8181/',
+              ws: true,
+              changeOrigin: true,
+          },
+          '/user/register':{
+              target: 'http://127.0.0.1:8181/',
+              ws: true,
+              changeOrigin: true,
+          },
+          '/user/api':{
+              target: 'http://127.0.0.1:8181/',
+              ws: true,
+              changeOrigin: true,
+          },
         '/public':{
             target: 'http://127.0.0.1:8181/',
             ws: true,
@@ -44,7 +59,7 @@ const c = {
         login: {
             entry: 'src/pages/login/main.js',
             template: 'public/index.html',
-            filename: 'register.html'
+            filename: 'login.html'
         },
         //
         alogin: {

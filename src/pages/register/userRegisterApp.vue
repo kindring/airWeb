@@ -23,39 +23,42 @@
       <div class="bg-block bg-blue-300">
         <div class="bg-block bg-yellow-200">
           <div class="bg-block bg-block2  bg-blue-100"></div>
+          <div class="bg-block right-1/4 bg-green-300">
+            <div class="bg-block bg-pink-600">
+              <div class="bg-block bg-block2  bg-blue-100"></div>
+            </div>
+            <div class="bg-block2 bg-yellow-200">
+              <div class="bg-block bg-block2  bg-red-100"></div>
+            </div>
+            <div class="bg-block2 bg-pink-300">
+              <div class="bg-block bg-block2  bg-blue-100"></div>
+            </div>
+          </div>
         </div>
-        <div class="bg-block bg-green-300">
-          <div class="bg-block bg-red-200">
-            <div class="bg-block bg-block2  bg-yellow-100">a</div>
-          </div>
-          <div class="bg-block bg-red-200">
-            <div class="bg-block bg-block2  bg-yellow-100"></div>
-          </div>
+      </div>
+      <div class="bg-block right-1/4 bg-green-300">
+        <div class="bg-block bg-yellow-200">
+          <div class="bg-block bg-block2  bg-blue-100"></div>
+        </div>
+        <div class="bg-block2 bg-yellow-200">
+          <div class="bg-block bg-block2  bg-red-100"></div>
+        </div>
+        <div class="bg-block2 bg-pink-300">
+          <div class="bg-block bg-block2  bg-blue-100"></div>
         </div>
       </div>
 
       <div class=" px-2.5 relative w-full h-full  flex justify-center items-center ">
-        <div class="left-0 lg:-left-10 w-4/5 lg:w-1/5 h-4/5 lg:h-3/5 login-box relative border overflow-auto rounded">
+        <div class="left-0 lg:-left-10 w-4/6  h-4/5 login-box relative border overflow-auto rounded">
           <div class="overflow-hidden w-full h-full absolute">
-            <div class="bg-block bg-green-300">
-              <div class="bg-block bg-red-200">
-                <div class="bg-block bg-block2  bg-yellow-100"></div>
-              </div>
-            </div>
-            <div class="bg-block bg-red-100">
-              <div class="bg-block bg-red-200">
+            <div class="bg-block bg-blue-300">
+              <div class="bg-block bg-yellow-200">
                 <div class="bg-block bg-block2  bg-red-100"></div>
               </div>
             </div>
-              <div class="bg-block bg-red-200">
-                <div class="bg-block bg-block2  bg-yellow-100"></div>
-              </div>
-              <div class="bg-block bg-red-200">
-                <div class="bg-block bg-block2  bg-yellow-100"></div>
-              </div>
-            </div>
           </div>
-          <div class="title relative  text-xl">Z机票网,用户注册</div>
+
+          <div class="title relative  text-xl">Z机票预定网-注册</div>
           <a-form-model
               class="relative"
               ref="ruleForm"
@@ -67,6 +70,24 @@
             <!--            用户名-->
             <a-form-model-item
                 class="mt-6"
+                ref="nickName"
+                label="昵称"
+                has-feedback
+                prop="nickName">
+              <a-input
+                  class="w-full"
+                  v-model="form.nickName"
+                  placeholder="你的名字"
+                  @blue="() => {
+                    $refs.nickName.onFieldBlur();
+                  }
+                "
+              />
+            </a-form-model-item>
+
+            <!--            用户名-->
+            <a-form-model-item
+                class="mt-6"
                 ref="account"
                 label="账号"
                 has-feedback
@@ -74,14 +95,14 @@
               <a-input
                   class="w-full"
                   v-model="form.account"
-                  placeholder="管理员账户"
-                  @blur="
-                  () => {
+                  placeholder="登录用的账号"
+                  @blur="() => {
                     $refs.account.onFieldBlur();
                   }
                 "
               />
             </a-form-model-item>
+
             <!--            用户密码-->
             <a-form-model-item
                 class="mt-2"
@@ -97,6 +118,22 @@
               />
             </a-form-model-item>
 
+            <!--            用户密码2-->
+            <a-form-model-item
+                class="mt-2"
+                ref="password2"
+                label="确认密码"
+                has-feedback
+                prop="password2"
+
+            >
+              <a-input-password
+                  class="w-full"
+                  placeholder="确认密码"
+                  v-model="form.password2"
+                  @blur="() => {$refs.password.onFieldBlur();}"
+              />
+            </a-form-model-item>
             <!--            用户名-->
             <a-form-model-item
                 class="mt-6"
@@ -135,7 +172,7 @@
 
       </div>
     </div>
-
+  </div>
 </template>
 
 <script>
@@ -152,26 +189,37 @@ export default {
   data(){
     return {
       // 是否为固定
-      labelCol: { span: 4 },
-      wrapperCol: { span: 16 },
+      labelCol: {span: 4},
+      wrapperCol: {span: 16},
       form: {
+        nickName: '',
         account: '',
         password: '',
+        password2: '',
         captcha: '',
       },
       // 要切换的url地址
-      jumpUrl: '/admin',
+      jumpUrl: '/login',
       rules: {
+        nickName: [
+          {required: 'true', message: '请输入用户名'}
+        ],
         account: [
-          {required: 'true',message: '请输入用户名'}
+          {required: 'true', message: '请输入登录账户'},
+          {validator: this.checkAccount}
         ],
         password: [
-          {required:'true',message:'请输入登陆密码'}
+          {required: 'true', message: '请输入登陆密码'}
+        ],
+        password2: [
+          {required: 'true', message: '请再次输入登陆密码'},
+          {validator: this.checkPassword}
         ],
         captcha: [
-          {required:'true',message:'请输入验证码'}
+          {required: 'true', message: '请输入验证码'}
         ]
-      }
+      },
+      timer: null
     }
   },
   computed:{
@@ -185,37 +233,74 @@ export default {
     }
   },
   methods:{
+    checkPassword(rule, value, callback) {
+      if (this.form.password != value) {
+        // 如果需要返回 error msg，就把它传给 `callback()`
+        callback('两次密码不一致');
+      } else {
+        // 如果通过校验，调用无参数的 `callback()` 即可
+        callback();
+      }
+    },
+    checkAccount(rule, value, callback){
+      if(this.timer){
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      this.timer = setTimeout(async()=>{
+        let [err,response] = await handle(userApi.checkAccount(value));
+        console.log(response);
+        let {ok,msg,res} = business.checkResponseRcode(response,err);
+        if(ok){
+          callback();
+        }else{
+          callback(msg);
+        }
+      },700);
+    },
     resetForm(){
+      this.form.nickName = '';
       this.form.account = '';
       this.form.password = '';
+      this.form.password2 = '';
       this.form.captcha = '';
     },
     async submitHandle(e){
+      let nickName = this.form.nickName;
       let account = this.form.account;
       let passwd = this.form.password;
       let captcha = this.form.captcha;
-      console.log(account,passwd,captcha);
-      let [err,response] = await handle(userApi.adminLogin(account,passwd,captcha));
-      console.log(response);
-      let rcodeMean = business.checkResponseRcode(response,err);
-      if(rcodeMean.ok){
-        // 登陆成功
-        this.$message.success(`登陆成功,稍后进行页面跳转`);
-        this.countDown();
-      }else{
-        // 登陆失败
-        this.$message[rcodeMean.type](rcodeMean.msg);
-        // 更新验证码
-        this.$refs.captchaImg.refreshCaptcha();
-        this.form.captcha = '';
-      }
+      this.$refs.ruleForm.validate(async valid=>{
+        console.log(valid)
+        if(!valid){
+          this.$message.warn('请正确填写数据');
+        }else{
+          console.log(account,passwd,captcha);
+          let [err,response] = await handle(userApi.register(nickName,account,passwd,captcha));
+          console.log(response);
+          let rcodeMean = business.checkResponseRcode(response,err);
+          if(rcodeMean.ok){
+            // 登陆成功
+            this.$message.success(`注册成功,稍后进行页面跳转`);
+            this.countDown();
+          }else{
+            // 登陆失败
+            this.$message[rcodeMean.type](rcodeMean.msg);
+            // 更新验证码
+            this.$refs.captchaImg.refreshCaptcha();
+            this.form.captcha = '';
+          }
+        }
+      })
+
+
     },
     // 登陆成功
     countDown() {
       let secondsToGo = 5,that=this;
 
       const modal = this.$success({
-        title: '登陆成功',
+        title: '注册成功',
         content: `将在${secondsToGo} 秒后自动跳转页面.`,
         okText:'立即跳转',
         onOk() {
@@ -255,9 +340,10 @@ body{
   width: 100%;
   height: 100%;
   position: absolute;
-  left: 53%;
+  left: 33%;
   top: 0%;
-  transform: rotate(77deg);
+  transform: rotate(
+      288deg);
   box-shadow: 0px 0px 15px 0px black;
 }
 .title{
@@ -271,14 +357,14 @@ body{
   left: 10%;
 }
 .bg-block2 > .bg-block2{
-  transform: scale(0.7);
+  transform: scale(0.5);
 }
 .logo{
   width: 100%;
   height: auto;
 }
 .login-box{
-  background-color: hsl(60deg 0% 99% / 66%);;
+  background-color: hsl(0deg 0% 99% / 66%);;
   box-shadow: 1px 3px 20px #525252;
 }
 

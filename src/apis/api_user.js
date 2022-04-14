@@ -27,12 +27,58 @@ function adminLogin(account,passwd,captcha,url = `/admin/login`){
     });
 }
 
+/**
+ * 检查是否有重复账号
+ * @param account
+ * @param url
+ */
+function checkAccount(account,url='/user/api/check'){
+    url += `?account=${account}`
+    return axios.get(url);
+}
+
 function adminLogout(url = `/admin/logout`){
     return axios.post(url);
 }
 
+/**
+ * 注册用户
+ * @param nickName
+ * @param account
+ * @param passwd
+ * @param captcha
+ * @param url
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+function register(nickName,account,passwd,captcha,url=`/user/register`){
+    return axios.post(url,{
+        nickName,
+        account,
+        passwd,
+        captcha
+    })
+}
+
+/**
+ * 用户登录
+ * @param account
+ * @param passwd
+ * @param captcha
+ * @param url
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+function login(account,passwd,captcha,url = `/user/login`){
+    return axios.post(url,{
+        account,
+        passwd,
+        captcha
+    });
+}
 export default {
-    adminLogin
+    adminLogin,
+    checkAccount,
+    register,
+    login
 }
 
 
