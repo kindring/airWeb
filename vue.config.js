@@ -36,12 +36,22 @@ const c = {
           template: 'public/index.html',
           filename: 'index.html'
       },
+        register: {
+            entry: 'src/pages/register/main.js',
+            template: 'public/index.html',
+            filename: 'register.html'
+        },
+        login: {
+            entry: 'src/pages/login/main.js',
+            template: 'public/index.html',
+            filename: 'register.html'
+        },
         //
-    alogin: {
-        entry: 'src/pages/adminLogin/main.js',
-        template: 'public/index.html',
-        filename: 'alogin.html'
-    },
+        alogin: {
+            entry: 'src/pages/adminLogin/main.js',
+            template: 'public/index.html',
+            filename: 'alogin.html'
+        },
         admin: {
             entry: 'src/pages/admin/main.js',
             template: 'public/index.html',

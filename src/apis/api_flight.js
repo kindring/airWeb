@@ -29,16 +29,23 @@ function addFlight(options,url='/api/flight/add'){
 }
 
 // 修改航班信息
-function chnageFlight(flightId,newOption,url='/api/flight/change'){
+function chnageFlight(flightId,newOption,url='/api/flight/update'){
     return axios.post(url, {
         flightId:flightId,
         newOption:newOption
     });
 }
 
+function flightInfo(flightId,url = '/api/flight/info'){
+    url += `?flightId=${flightId}`
+    return axios.get(url)
+}
 export default {
     searchFlights,
     flightList,
+    addFlight,
+    chnageFlight,
+    flightInfo
 }
 
 

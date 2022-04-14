@@ -24,18 +24,38 @@
         <div class="bg-block bg-yellow-200">
           <div class="bg-block bg-block2  bg-blue-100"></div>
         </div>
+        <div class="bg-block bg-green-300">
+          <div class="bg-block bg-red-200">
+            <div class="bg-block bg-block2  bg-yellow-100">a</div>
+          </div>
+          <div class="bg-block bg-red-200">
+            <div class="bg-block bg-block2  bg-yellow-100"></div>
+          </div>
+        </div>
       </div>
 
       <div class=" px-2.5 relative w-full h-full  flex justify-center items-center ">
         <div class="left-0 lg:-left-10 w-4/5 lg:w-1/5 h-4/5 lg:h-3/5 login-box relative border overflow-auto rounded">
           <div class="overflow-hidden w-full h-full absolute">
-            <div class="bg-block bg-blue-300">
-              <div class="bg-block bg-yellow-200">
-                <div class="bg-block bg-block2  bg-blue-100"></div>
+            <div class="bg-block bg-green-300">
+              <div class="bg-block bg-red-200">
+                <div class="bg-block bg-block2  bg-yellow-100"></div>
+              </div>
+            </div>
+            <div class="bg-block bg-red-100">
+              <div class="bg-block bg-red-200">
+                <div class="bg-block bg-block2  bg-red-100"></div>
+              </div>
+            </div>
+              <div class="bg-block bg-red-200">
+                <div class="bg-block bg-block2  bg-yellow-100"></div>
+              </div>
+              <div class="bg-block bg-red-200">
+                <div class="bg-block bg-block2  bg-yellow-100"></div>
               </div>
             </div>
           </div>
-          <div class="title relative  text-xl">air航班管理系统登录</div>
+          <div class="title relative  text-xl">Z机票网,用户注册</div>
           <a-form-model
               class="relative"
               ref="ruleForm"
@@ -115,7 +135,7 @@
 
       </div>
     </div>
-  </div>
+
 </template>
 
 <script>
@@ -235,10 +255,9 @@ body{
   width: 100%;
   height: 100%;
   position: absolute;
-  left: 33%;
+  left: 53%;
   top: 0%;
-  transform: rotate(
-      27deg);
+  transform: rotate(77deg);
   box-shadow: 0px 0px 15px 0px black;
 }
 .title{
@@ -252,14 +271,14 @@ body{
   left: 10%;
 }
 .bg-block2 > .bg-block2{
-  transform: scale(0.9);
+  transform: scale(0.7);
 }
 .logo{
   width: 100%;
   height: auto;
 }
 .login-box{
-  background-color: hsl(0deg 0% 99% / 66%);;
+  background-color: hsl(60deg 0% 99% / 66%);;
   box-shadow: 1px 3px 20px #525252;
 }
 
