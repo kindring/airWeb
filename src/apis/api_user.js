@@ -74,11 +74,18 @@ function login(account,passwd,captcha,url = `/user/login`){
         captcha
     });
 }
+
+// 获取用户登录信息
+function loadInfo(url=`/user/api/info`){
+    return axios.get(url);
+}
+
 export default {
     adminLogin,
     checkAccount,
     register,
-    login
+    login,
+    loadInfo
 }
 
 

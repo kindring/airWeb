@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import zh_CN from "ant-design-vue/es/locale/zh_CN"
 import layout from "@/components/admin/layout";
 // import apis from '@/apis/index'
 export default {

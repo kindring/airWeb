@@ -19,8 +19,11 @@
 </template>
 
 <script>
+import zh_CN from "ant-design-vue/es/locale/zh_CN"
 import Layout_header from "../../components/index/layout_header";
 import layout_footer from "../../components/index/layout_footer";
+import {mapActions} from "vuex";
+import types from "@/store/homeTypes";
 // import apis from '@/apis/index'
 export default {
   name: 'App',
@@ -43,8 +46,17 @@ export default {
   },
   beforeCreate(){},
   beforeMount(){},
-  mounted(){},
+  async mounted(){
+    let recodeMeta =await this.loadUser();
+    if(!recodeMeta.ok){
+      return this.$message.warn(recodeMeta.msg);
+    }
+    // 加载用户状态整个
+  },
   methods:{
+    ...mapActions({
+      loadUser: types.user.actions.loadUser,
+    }),
   }
 }
 </script>

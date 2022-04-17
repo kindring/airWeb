@@ -1,6 +1,6 @@
 <template>
 
-  <div class="w-p1200 h-72 rounded overflow-hidden ">
+  <div class="w-p1200 h-auto rounded">
 <!--    切换框-->
     <div class="tabs w-full flex h-12">
       <div
@@ -18,32 +18,38 @@
         {{item.text}}
       </div>
     </div>
-    <div class="h-60 bg-blue-300"></div>
+    <div class="h-auto bg-blue-300" >
+      <component :is="tabRouter[tabNow].com"></component>
+    </div>
   </div>
 </template>
 
 <script>
+import domesticTab from "@components/index/components/quickTabs/domesticTab";
+import internationalTab from "@components/index/components/quickTabs/internationalTab";
+import newsTab from "@components/index/components/quickTabs/newsTab";
 export default {
   name: "quickTab",
+  components:{
+    domesticTab,
+    internationalTab,
+    newsTab,
+  },
   data(){
     return {
-      tabNow:1,
+      tabNow:0,
       tabRouter:[
           {
             text:'国内机票',
-            com: 'inland'
+            com: 'domesticTab'
           },
           {
             text:'国际机票',
-            com: 'international'
+            com: 'internationalTab'
           },
           {
             text:'航班动态',
-            com: 'info'
-          },
-          {
-            text:'在线选坐',
-            com: 'selected'
+            com: 'newsTab'
           },
           {
             text:'退票改签',

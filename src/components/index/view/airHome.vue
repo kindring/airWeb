@@ -16,6 +16,8 @@
 import banner from '@/components/index/components/banner'
 import QuickTab from "@components/index/components/quickTab";
 import Recommend from "@components/index/components/recommend";
+import {mapState} from "vuex";
+import types from "@/store/homeTypes";
 export default {
   name: "airHome",
   components:{
@@ -28,7 +30,13 @@ export default {
 
     }
   },
-
+  computed:{
+    ...mapState({
+      // 城市列表
+      isLogin:state=>state.user[types.user.state.isLogin],
+      // 用户选择的
+    }),
+  }
 }
 </script>
 

@@ -6,7 +6,7 @@ import 'ant-design-vue/dist/antd.css'
 import './index.css';
 import '@/icons/index'
 import router from "@/routers/index/home_router_main"
-// import  store from '@/store'
+import  store from '@/store/homeIndex'
 import spin from '@/components/public/spin/spin'
 import '@/svg';
 import SvgIcon from '@/components/public/IconSvg/iconSvg';
@@ -21,7 +21,7 @@ Vue.use(Antd)
 Vue.use(spin)
 
 new Vue({
-  // store:store,
+  store:store,
   router:router,
   render: h => h(App)
 }).$mount('#app')

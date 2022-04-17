@@ -40,12 +40,18 @@ function flightInfo(flightId,url = '/api/flight/info'){
     url += `?flightId=${flightId}`
     return axios.get(url)
 }
+
+function news(isAll = false,url='/api/flight/news'){
+    url += `?all=${isAll}`
+    return axios.get(url);
+}
 export default {
     searchFlights,
     flightList,
     addFlight,
     chnageFlight,
-    flightInfo
+    flightInfo,
+    news
 }
 
 

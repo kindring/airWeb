@@ -97,8 +97,17 @@
               />
               <captcha class="w-full h-24 overflow-hidden mt-1.5 rounded" ref="captchaImg" captcha-url="/api/captcha"></captcha>
             </a-form-model-item>
+            <div class="mt-1">
+              <a-col :span="labelCol.span">
+
+              </a-col>
+              <a-col>
+                <a href="/register">立即注册</a>
+              </a-col>
+            </div>
+
             <!--             提交按钮            -->
-            <a-row class="mt-10">
+            <a-row class="mt-6">
               <a-col :span="labelCol.span">
 
               </a-col>

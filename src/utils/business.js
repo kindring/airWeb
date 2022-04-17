@@ -1,5 +1,5 @@
 // 统一处理业务逻辑
-
+import code from "@/mapField/rcodeMap"
 let rcodeHandleMap = {
 };
 function registerHandle(rcode,handle){
@@ -23,9 +23,19 @@ function toLogin(){
  * 检查api返回值对应含义,普通服务器接口
  * @param response axios 接口返回的请求值
  * @param errDeal {boolean} 是否是否由此函数自动处理错误
+ * @param fns {object} 对应的rcocd绑定对应的函数
  * @returns {{msg: string, ok: boolean, type: string}}
  */
-function checkResponseRcode(response,err){
+function checkResponseRcode(response,err,fns={}){
+    let defaultFns = {
+        [code.notLogin]:toLogin,
+    }
+    console.log(fns)
+    let fnHandle={
+        ...defaultFns,
+        ...fns
+    }
+    console.log(fnHandle)
     let res = {
         //请求是否成功
         ok: false,
@@ -55,7 +65,10 @@ function checkResponseRcode(response,err){
             break;
         case 3:
             res.msg = '登陆失效';
-            toLogin();
+            console.log('登录失效')
+            if(fnHandle[code.notLogin]){
+                fnHandle[code.notLogin]();
+            }
             break;
         case 4:
             res.msg = '无权限访问接口';
