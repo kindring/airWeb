@@ -49,6 +49,13 @@ function news(isAll = false,url='/api/flight/news'){
 function setState(flightId,nextState,url = `/api/flight/state`){
     return axios.post(url,{flightId:flightId,nextState:nextState});
 }
+
+function searchSellFlights(searchOptions,url = '/api/flight/sells'){
+    return axios.post(url,searchOptions);
+}
+function sellFlights(url = '/api/flight/sellist'){
+    return axios.get(url);
+}
 export default {
     searchFlights,
     flightList,
@@ -56,6 +63,8 @@ export default {
     chnageFlight,
     flightInfo,
     setState,
+    searchSellFlights,
+    sellFlights,
     news
 }
 

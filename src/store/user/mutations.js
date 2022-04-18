@@ -24,6 +24,8 @@ export default {
         state[types.state.startTime] = v;
     },
     [types.mutations.setRouteType]: (state, v) => {
+        console.log(`设置routeType${v} - ${state[types.state.routeType]}`)
         state[types.state.routeType] = v;
+        console.log(state[types.state.routeType])
     },
 }

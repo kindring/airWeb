@@ -21,7 +21,7 @@
               :key="'header-'+item.id"
               :type="item.type"
               :path="item.path"
-              class="menu-item pl-2 w-full flex items-center w-12 md:w-28 lg:w-40 cursor-pointer hover:bg-blue-400"
+              class="menu-item pl-2 w-full flex items-center w-12 md:w-28 lg:w-40 cursor-pointer hover:bg-blue-400 hover:text-white "
           >
             <svg-icon
                 class="text-2xl pr-1"
@@ -32,7 +32,7 @@
         </div>
 
         <div class="flex">
-          <div class="flex items-center px-6 cursor-pointer hover:bg-blue-400">
+          <div class="flex items-center px-6 cursor-pointer hover:bg-blue-400  hover:text-white ">
             <svg-icon
                 class="text-2xl  pr-1"
                 icon-class="car"
@@ -42,7 +42,7 @@
           <air-link
               :type="2"
               :path="isLogin?'/user':'login'"
-              class="menu-item pl-3 w-full flex items-center w-12 md:w-28 lg:w-40 cursor-pointer hover:bg-blue-400"
+              class="menu-item pl-3 w-full flex items-center w-12 md:w-28 lg:w-40 cursor-pointer hover:bg-blue-400  hover:text-white "
           >
             <svg-icon
                 class="text-2xl  pr-1"

@@ -29,7 +29,7 @@
           <table-select
               :options="departureCityOptions"
               v-model="departureCity"
-              :disableds="departuretDisableds"
+              :disableds="departureDisabled"
               placeholder="出发城市"
               @change="changeDisables"
               keystr="departureCity">
@@ -37,10 +37,12 @@
         </div>
 
       </div>
-      <svg-icon  v-if="(selectRouteType==='d-d'||selectRouteType==='i-i')"
-                 @click="switchCity"
+      <div v-if="(selectRouteType==='d-d'||selectRouteType==='i-i')"
+           @click="switchCity">
+      <svg-icon
                  class="text-3xl  px-1 hover:text-red-300"
                  icon-class="switch" />
+      </div>
       <svg-icon  v-if="!(selectRouteType==='d-d'||selectRouteType==='i-i')"
                  class="text-3xl  p-1 hover:text-red-300"
                  icon-class="fly" />
@@ -52,10 +54,10 @@
         <div class="w-full">
           <table-select
             :options="targetCityOptions"
-            :disableds="targetDisableds"
+            :disableds="targetDisabled"
             v-model="targetCity"
             placeholder="目标城市"
-            @change="()=>{changeDisables()}"
+            @change="()=>{changeDisables}"
             keystr="targetCity">
         </table-select>
         </div>
@@ -135,9 +137,9 @@ export default {
   data(){
     return {
       departureCityOptions:[],
-      departuretDisableds:[],
+      departureDisabled:[],
       targetCityOptions:[],
-      targetDisableds:[],
+      targetDisabled:[],
       domesticOptions:[],
       internationalOptions:[],
       startTimes:[],
@@ -169,7 +171,7 @@ export default {
         text: val.cityName
       });
     });
-    this.routerChange();
+    // this.routerChange();
     // 加载时间
     if(this.startTime){
       this.$set(this.startTimes,0,this.startTime)
@@ -205,8 +207,8 @@ export default {
         this.targetCityOptions = this.internationalOptions;
         let tmpTarget = this.targetCity;
         this.targetCity = this.departureCity;
-        this.departuretDisableds = [];
-        this.targetDisableds = [];
+        this.departureDisabled = [];
+        this.targetDisabled = [];
         // 国内航班改变
         if(this.nowRouteType === 'i-d'){
           // 国外飞国内转变为国外
@@ -226,8 +228,8 @@ export default {
         this.targetCityOptions = this.domesticOptions;
         let tmpDeparture = this.departureCity;
         this.departureCity = this.targetCity;
-        this.departuretDisableds = [];
-        this.targetDisableds = [];
+        this.departureDisabled = [];
+        this.targetDisabled = [];
         // 国内航班改变
         if(this.nowRouteType === 'd-i'){
           // 内飞外转变为外飞内
@@ -240,9 +242,11 @@ export default {
           this.departureCity = null;
         }
       }else if(this.routerType === 'i-i'){
+
         // 国外飞国内
         this.departureCityOptions = this.internationalOptions;
         this.targetCityOptions = this.internationalOptions;
+        console.log('15454545')
         // 国内航班改变
         if(this.nowRouteType === 'd-i'){
           // 国内飞国外转变为国外飞国外
@@ -261,8 +265,8 @@ export default {
     },
     changeDisables(){
       if(this.routerType === 'i-i'){
-        this.targetDisableds = [this.departureCity]
-        this.departuretDisableds = [this.targetCity]
+        this.targetDisabled = [this.departureCity]
+        this.departureDisabled = [this.targetCity]
       }
     },
     // 时间管理函数

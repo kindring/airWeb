@@ -32,7 +32,7 @@ export default {
       default: ''
     },
     disableds:{
-      default: []
+      default: function (){return []}
     }
   },
   beforeMount() {

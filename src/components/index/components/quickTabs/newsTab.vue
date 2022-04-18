@@ -86,7 +86,7 @@
           </div>
         </div>
         <div class="px-4 mt-1">
-          <div class="w-full bg-blue-300  rounded flex py-1 justify-around items-center">
+          <div class="w-full bg-pink-100  rounded flex py-1 justify-around items-center">
             <a-button type="primary">
               <air-link :type="2" :path="`#/wicket`">更多检票信息</air-link>
             </a-button>

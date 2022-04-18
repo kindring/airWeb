@@ -134,6 +134,7 @@ export default {
     if(this.endTime){
       this.$set(this.startTimes,1,this.endTime)
     }
+
     this.$store.commit(types.user.mutations.setRouteType, 'd-d');
   },
   methods:{

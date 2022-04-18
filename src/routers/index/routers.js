@@ -1,5 +1,6 @@
 import airHome from "../../components/index/view/airHome.vue";
 import flightSearch from "@components/index/view/flightSearch";
+import flightInfo from "@components/index/view/flightInfo";
 const routers = [{
     id: '/',
     text: '首页',
@@ -17,6 +18,15 @@ const routers = [{
         name: '首页',
         meta:{title:"搜索航班"},
         component: flightSearch,
+    },
+    {
+        id: '/info',
+        text: '航班信息',
+        is_menu: true,
+        path: '/info',
+        name: '航班信息',
+        meta:{title:"航班信息"},
+        component: flightInfo,
     },
 ]
 
