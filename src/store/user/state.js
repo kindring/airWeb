@@ -9,4 +9,5 @@ export default {
     [type.state.isLogin]:false,
     [type.state.startTime]:moment().endOf('day'),
     [type.state.endTime]:null,
+    [type.state.routeType]:'d-d',
 }

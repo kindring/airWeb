@@ -12,7 +12,8 @@ const state = {
     startTime: "STATE_START_TIME",
     // 出发时间结束时间段
     endTime: "STATE_END_TIME",
-
+    // 航班类型
+    routeType: 'STATE_ROUTE_TYPE',
 }
 
 const mutations = {
@@ -22,6 +23,7 @@ const mutations = {
     setTargetCity: 'MUTATION_SET_TARGET',
     setStartTime: 'MUTATION_SET_START_TIME',
     setEndTime: 'MUTATION_SET_END_TIME',
+    setRouteType: "MUTATION_SET_ROUTE_TYPE",
 }
 
 const actions = {

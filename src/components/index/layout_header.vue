@@ -78,7 +78,7 @@ export default {
         {
           id:2,
           text: '购票',
-          path: '/#/buy',
+          path: '/#/search',
           icon: 'buy',
           type: 2
         },

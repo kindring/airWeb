@@ -172,7 +172,19 @@
             </div>
           </div>
         </a-form-model-item>
-
+        <a-row class="mt-10 flex items-center" v-if="flightId">
+          <a-col class="text-right pr-2.5" :span="labelCol.span">
+            航班状态:
+          </a-col>
+          <a-col>
+            <div class="w-24 ml-1 py-1 px-2 rounded bg-green-200 cursor-pointer hover:opacity-70 flex justify-center " >
+              <span  v-if="form.flightState==='1'">售票中</span>
+              <span  v-else-if="form.flightState==='2'">检票中</span>
+              <span  v-else-if="form.flightState==='3'">飞行中</span>
+              <span  v-else-if="form.flightState==='4'">结束</span>
+            </div>
+          </a-col>
+        </a-row>
         <!--             提交按钮            -->
         <a-row class="mt-10">
           <a-col :span="labelCol.span">
@@ -180,10 +192,9 @@
           </a-col>
           <a-col>
             <a-button-group>
-              <a-button >
+              <a-button v-if="flightId">
                 <router-link
                     to="/flights"
-                    v-if="flightId"
                     type="danger"
                 >取消</router-link>
               </a-button>
@@ -195,6 +206,9 @@
 
       </a-form-model>
     </table-layout>
+    <pop>
+
+    </pop>
   </div>
 </template>
 
@@ -220,6 +234,7 @@ export default {
       pageText: '新增航班',
       isAdd: true,
       flightId: null,
+      reAdd: false,
       labelCol: { span: 4 },
       wrapperCol: { span: 16 },
       form: {
@@ -237,6 +252,7 @@ export default {
         totalVotes: 0,
         // 出发城市
         departureCity: '',
+        flightState: '1',
         // 目标城市
         targetCity:'',
       },
@@ -286,6 +302,10 @@ export default {
     if(this.$route.query&&this.$route.query.flightId){
       this.flightId = this.$route.query.flightId;
       this.pageText = '编辑航班信息';
+      if(this.$route.query.reAdd === 'true'){
+        this.pageText = '重新添加航班信息';
+        this.reAdd = true;
+      }
       await this.loadFlight();
     }else{
       this.resetForm();
@@ -403,6 +423,7 @@ export default {
       this.form.departureCity = res.data.departureCity;
       this.form.targetCity = res.data.targetCity;
       this.form.totalVotes = res.data.totalVotes;
+      this.form.flightState = res.data.flightState;
       this.form.times[0] = moment((res.data.sailingTime-0)*1000);
       this.form.times[1] = moment((res.data.langdinTime -0)*1000);
       // 判断是什么类型的数据
@@ -436,7 +457,7 @@ export default {
           body.currentPrice = this.form.currentPrice;
           body.originalPrice = this.form.originalPrice;
           body.totalVotes = this.form.totalVotes;
-      console.log(times)
+          console.log(times)
           if(times[0]){
             sailingTimeUnix = times[0].valueOf();
             body.sailingTime = (sailingTimeUnix-0) / 1000;
@@ -447,7 +468,7 @@ export default {
           }
       // return false;
       let promiseFn,changeOption = {};
-      if (this.flightId){
+      if (this.flightId && !this.reAdd){
       //  修改航班
           // 获取修改项
           // 航班名

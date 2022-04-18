@@ -1,121 +1,103 @@
 <template>
-  <a-form class="py-2 w-full h-full h-60">
-<!--    国外出发还是国内出发-->
-    <a-row class="w-full flex justify-center px-2 ">
-      <div class="w-10/12 flex items-center py-1.5 px-1 bg-purple-200  rounded">
-        <a-radio-group v-model="routerType" @change="routerChange">
-          <a-radio-button value="d-i">
-            国内飞国际
-          </a-radio-button>
-          <a-radio-button value="i-d">
-            国外飞国内
-          </a-radio-button>
-          <a-radio-button value="i-i">
-            国际飞行
-          </a-radio-button>
-        </a-radio-group>
-      </div>
-    </a-row>
+  <div class="w-full bg-gray-300">
+<!--    航班列表 -->
+    <div class="w-full h-14 flex items-center justify-center bg-white">
+        <div class="w-p1200 flex h-full items-center ">
 
-<!--    起始城市-->
-    <a-row class="w-full flex justify-center items-center  mt-1">
-<!--     出发城市-->
+          <div class="flex shadow bg-pink-200 rounded py-1 px-2">
+            <table-select class="w-48" :options="routeTypeOptions" v-model="routeType"/>
+          </div>
+<!--          起始城市-->
+          <div class="px-2 w-2/4 flex items-center"><!--     出发城市-->
 
-      <div class="w-2/5  px-2 py-2 shadow bg-green-200 rounded">
-        <div class="pl-1 flex text-xl items-center">
-          出发城市:
+            <div class=" px-2 py-1 shadow bg-green-200 rounded">
+              <div class="w-48">
+                <table-select
+                    class="w-full"
+                    :options="departureCityOptions"
+                    v-model="departureCity"
+                    :disableds="departuretDisableds"
+                    placeholder="出发城市"
+                    @change="changeDisables"
+                    keystr="departureCity">
+                </table-select>
+              </div>
+
+            </div>
+            <svg-icon  v-if="(routeType==='d-d'||routeType==='i-i')"
+                       @click="switchCity"
+                       class="text-3xl  px-1 hover:text-red-300"
+                       icon-class="switch" />
+            <svg-icon  v-if="!(routeType==='d-d'||routeType==='i-i')"
+                       class="text-3xl  p-1 hover:text-red-300"
+                       icon-class="fly" />
+            <!--      目标城市-->
+            <div class=" px-2 py-1 shadow bg-yellow-200 rounded">
+              <div class="w-48">
+                <table-select
+                    class="w-full"
+                    :options="targetCityOptions"
+                    :disableds="targetDisableds"
+                    v-model="targetCity"
+                    placeholder="目标城市"
+                    @change="()=>{changeDisables()}"
+                    keystr="targetCity">
+                </table-select>
+              </div>
+            </div></div>
         </div>
-        <div class="w-full">
-          <table-select
-              :options="departureCityOptions"
-              v-model="departureCity"
-              :disableds="departuretDisableds"
-              placeholder="出发城市"
-              @change="changeDisables"
-              keystr="departureCity">
-          </table-select>
-        </div>
-
-      </div>
-      <svg-icon  v-if="(selectRouteType==='d-d'||selectRouteType==='i-i')"
-                 @click="switchCity"
-                 class="text-3xl  px-1 hover:text-red-300"
-                 icon-class="switch" />
-      <svg-icon  v-if="!(selectRouteType==='d-d'||selectRouteType==='i-i')"
-                 class="text-3xl  p-1 hover:text-red-300"
-                 icon-class="fly" />
-<!--      目标城市-->
-      <div class="w-2/5 px-2 py-2 shadow bg-yellow-200 rounded">
-      <div class="pl-1 flex text-xl items-center">
-        目标城市:
-      </div>
-        <div class="w-full">
-          <table-select
-            :options="targetCityOptions"
-            :disableds="targetDisableds"
-            v-model="targetCity"
-            placeholder="目标城市"
-            @change="()=>{changeDisables()}"
-            keystr="targetCity">
-        </table-select>
-        </div>
-      </div>
-    </a-row>
-<!-- 搜索时间框范围-->
-    <a-row class="w-full flex justify-center mt-1.5 px-2">
-      <div class="w-10/12 flex items-center py-1.5 bg-red-200  rounded">
-        <div class="px-3">预计出发时间</div>
-        <a-range-picker
-            :disabled-date="disabledDate"
-            v-model="startTimes"
-            format="YYYY-MM-DD"
-            @change="timeHandle"
-        />
-      </div>
-    </a-row>
-<!--   占位演示-->
-
-<!-- 确认框-->
-    <a-row class="w-full flex justify-center mt-1.5 px-2">
-      <div class="w-10/12 flex items-center py-1.5 bg-red-200 px-2 rounded">
-        <a-button type="primary">
-          <air-link path="/search">
-            查找航班
-          </air-link>
-        </a-button>
-      </div>
-    </a-row>
-  </a-form>
+    </div>
+<!--    广告-->
+    <flight-ad/>
+  </div>
 </template>
 
 <script>
-import moment from "moment";
-import tableSelect from "@components/admin/components/tableSelect";
-import {mapActions, mapState} from "vuex";
+import FlightAd from "@components/index/components/flightAd";
+import TableSelect from "@components/admin/components/tableSelect";
 import types from "@/store/homeTypes";
-import fields from "@/mapField/field"
-import AirLink from "@components/public/airLink";
+import fields from "@/mapField/field";
+import moment from "moment";
+import {mapActions} from "vuex";
 export default {
-  name: "internationalTab",
-  components:{
-    AirLink,
-    tableSelect
+  name: "flightSearch",
+  components: {TableSelect, FlightAd},
+  data(){
+    return {
+      routeTypeOptions:[
+        {text:'国内飞国内',value:'d-d'},
+        {text:'国际飞国际',value:'i-i'},
+        {text:'国内飞国外',value:'d-i'},
+        {text:'国外飞国内',value:'i-d'}
+      ],
+      domesticOptions : [],
+      departuretDisableds: [],
+      internationalOptions : [],
+      internationalDisableds: [],
+      startTimes:[],
+      offsetDays: 86400000 * 7,
+      nowRouteType: null
+    };
   },
   computed:{
-    ...mapState({
-      // 城市列表
-      domestics:state=>state.citys[types.citys.state.domestic],
-      internationals:state=>state.citys[types.citys.state.international],
-      //开始时间
-      startTime:state=>state.user[types.user.state.startTime],
-      // 结束时间
-      endTime:state=>state.user[types.user.state.endTime],
-      // 航班类型
-      selectRouteType:state=>state.user[types.user.state.routeType]
-    }),
-    departureCity: {
+    // 城市列表
+    domestics:state=>state.citys[types.citys.state.domestic],
+    internationals:state=>state.citys[types.citys.state.international],
+    //开始时间
+    startTime:state=>state.user[types.user.state.startTime],
+    // 结束时间
+    endTime:state=>state.user[types.user.state.endTime],
+    routeType:{
       get() {
         // 这里也是用了Vuex里的 modules 大家可以当成普通的变量来看
+        return this.$store.state.user[types.user.state.routeType]
+      },
+      set(newVal) {
+        this.$store.commit(types.user.mutations.setRouteType, newVal)
+      }
+    },
+    departureCity: {
+      get() {
         return this.$store.state.user[types.user.state.departureCity]
       },
       set(newVal) {
@@ -132,27 +114,11 @@ export default {
       }
     },
   },
-  data(){
-    return {
-      departureCityOptions:[],
-      departuretDisableds:[],
-      targetCityOptions:[],
-      targetDisableds:[],
-      domesticOptions:[],
-      internationalOptions:[],
-      startTimes:[],
-      backTimes:[],
-      offsetDays: 86400000 * 7,
-      routerType: 'd-i',
-      nowRouteType: null
+  async mounted()
+  {
+    if(!this.routeType){
+      this.routeType = 'd-d'
     }
-  },
-  async mounted() {
-    // console.log('当前的type'+this.selectRouteType)
-    if(this.selectRouteType&&this.selectRouteType!=='d-d'){
-      this.routerType = this.selectRouteType
-    }
-    this.routeType = this.selectRouteType;
     let x = await this.loadCity({cityType:fields.cityType_domestic});
     if(!x){return this.$message.warn('无法获取国内城市列表')}
     this.domestics.forEach(val=>{
@@ -170,13 +136,6 @@ export default {
       });
     });
     this.routerChange();
-    // 加载时间
-    if(this.startTime){
-      this.$set(this.startTimes,0,this.startTime)
-    }
-    if(this.endTime){
-      this.$set(this.startTimes,1,this.endTime)
-    }
   },
   methods:{
     moment,
@@ -196,10 +155,25 @@ export default {
     },
     // 航班路线改变
     routerChange(){
-      if(this.nowRouteType == this.routerType){
+      if(this.nowRouteType === this.routerType){
         return console.log('憨八龟')
       }
-      if(this.routerType === 'd-i'){
+      if(this.routeType === 'd-d'){
+        // 国内 飞 国内
+        this.departureCityOptions = this.domesticOptions;
+        this.targetCityOptions = this.internationalOptions;
+        // 国内航班改变
+        if(this.nowRouteType === 'd-i'){
+          // 国内飞国外转变为国外飞国外
+          this.targetCity = null;
+        }else if(this.nowRouteType === 'i-d'){
+          this.departureCity = null;
+        }else{
+          this.targetCity = null;
+          this.departureCity = null;
+        }
+        this.changeDisables();
+      }else if(this.routerType === 'd-i'){
         // 国内飞国外
         this.departureCityOptions = this.domesticOptions;
         this.targetCityOptions = this.internationalOptions;
@@ -257,10 +231,9 @@ export default {
         this.changeDisables()
       }
       this.nowRouteType = this.routerType;
-      this.$store.commit(types.user.mutations.setRouteType, this.nowRouteType);
     },
     changeDisables(){
-      if(this.routerType === 'i-i'){
+      if(this.routerType === 'i-i' || this.routeType === 'd-d'){
         this.targetDisableds = [this.departureCity]
         this.departuretDisableds = [this.targetCity]
       }

@@ -45,12 +45,17 @@ function news(isAll = false,url='/api/flight/news'){
     url += `?all=${isAll}`
     return axios.get(url);
 }
+
+function setState(flightId,nextState,url = `/api/flight/state`){
+    return axios.post(url,{flightId:flightId,nextState:nextState});
+}
 export default {
     searchFlights,
     flightList,
     addFlight,
     chnageFlight,
     flightInfo,
+    setState,
     news
 }
 

@@ -3,6 +3,7 @@ import time from '@/utils/time'
 let flightColumn = [
         {
             title: 'id',
+            key: 'id',
             dataIndex: 'id',
         },
         {
@@ -35,6 +36,11 @@ let flightColumn = [
                 unixTime = (unixTime - 0)*1000
                 return time.dateFormat(new Date(unixTime))
             }
+        },
+        {
+            title: '航班状态',
+            dataIndex: 'flightState',
+            scopedSlots: { customRender: 'state' },
         },
         {
             title: '操作',
