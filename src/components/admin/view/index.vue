@@ -9,12 +9,12 @@
       </a-col>
       <a-col :span="5">
         <round-title>
-          <router-link  class="h-72 flex justify-center items-center" to="/flight">航班管理</router-link>
+          <router-link  class="h-72 flex justify-center items-center" to="/flights">航班列表</router-link>
         </round-title>
       </a-col>
       <a-col :span="5">
         <round-title>
-          <router-link  class="h-72 flex justify-center items-center" to="/flight">航班管理</router-link>
+          <router-link  class="h-72 flex justify-center items-center" to="/addFlight">新增航班</router-link>
         </round-title>
       </a-col>
     </a-row>
