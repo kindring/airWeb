@@ -35,7 +35,7 @@
             <div class="w-1/6 flex justify-center">
             <div class="px-1.5 flex items-center ml-3 ">
               <a-button type="primary">
-                <air-link :type="2" :path="`#/flight?id=${item.id}`">立即购票</air-link>
+                <air-link :type="2" :path="`#/info?flightId=${item.id}`">立即购票</air-link>
               </a-button>
             </div>
               </div>
