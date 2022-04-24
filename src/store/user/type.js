@@ -14,6 +14,8 @@ const state = {
     endTime: "STATE_END_TIME",
     // 航班类型
     routeType: 'STATE_ROUTE_TYPE',
+    // 购物车
+    cars: 'STATE_USER_CAR',
 }
 
 const mutations = {
@@ -24,14 +26,21 @@ const mutations = {
     setStartTime: 'MUTATION_SET_START_TIME',
     setEndTime: 'MUTATION_SET_END_TIME',
     setRouteType: "MUTATION_SET_ROUTE_TYPE",
+    setCar: 'MUTATION_SET_CARS'
 }
 
 const actions = {
-    loadUser: 'ACTION_LOAD_USER'
+    loadUser: 'ACTION_LOAD_USER',
+    loadCar: 'ACTION_USER_CAR'
+}
+
+const getters = {
+    car: 'GETTERS_CAR',
 }
 
 export default {
     mutations,
     actions,
+    getters,
     state
 }

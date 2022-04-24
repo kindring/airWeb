@@ -80,11 +80,16 @@ function loadInfo(url=`/user/api/info`){
     return axios.get(url);
 }
 
+// 加载用户购物车
+function loadCar(url = '/user/api/cars'){
+    return axios.get(url);
+}
 export default {
     adminLogin,
     checkAccount,
     register,
     login,
+    loadCar,
     loadInfo
 }
 

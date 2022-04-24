@@ -15,6 +15,11 @@ export default {
     timeout: 7,
     // 无法找到记录,可用于账号密码错误等场景的自动化提示
     notFound: 8,
+
+    // 二次访问接口异常
+    apiError: 8,
+    // 存储异常
+    saveError: 9,
     // 数据重复,在某些新增的场景表示该数据已经重复
-    dataRepeat: 9
+    dataRepeat: 10,
 }

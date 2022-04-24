@@ -28,4 +28,7 @@ export default {
         state[types.state.routeType] = v;
         console.log(state[types.state.routeType])
     },
+    [types.mutations.setCar]: (state,v)=>{
+        state[types.state.cars] = v;
+    }
 }
