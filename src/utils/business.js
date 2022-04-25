@@ -100,5 +100,6 @@ function checkErr(err){
 export default {
     checkResponseRcode,
     checkErr,
+    toLogin,
     registerHandle
 }

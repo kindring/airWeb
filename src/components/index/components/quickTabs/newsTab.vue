@@ -28,8 +28,19 @@
 </div>
               <!-- 正在售票中-->
             <div class="w-1/5 flex justify-center">
-            <div class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
-              正在售票中
+            <div class="px-2.5 flex items-center ml-3 py-1" >
+              <div v-if="item.flightState == 1" class="px-2.5 flex items-center ml-3 bg-green-200 py-1" >
+                正在售票中
+              </div>
+              <div v-else-if="item.flightState == 2" class="px-2.5 flex items-center ml-3 bg-blue-300 py-1" >
+                正在检票中
+              </div>
+              <div v-else-if="item.flightState == 3" class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
+                飞行中
+              </div>
+              <div v-else class="px-2.5 flex items-center ml-3 bg-gray-400 py-1" >
+                航班已经结束
+              </div>
             </div>
 </div>
             <div class="w-1/6 flex justify-center">
@@ -79,8 +90,17 @@
             </div>
             <!-- 正在售票中-->
             <div class="w-1/5 flex justify-center">
-              <div class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
+              <div v-if="item.flightState == 1" class="px-2.5 flex items-center ml-3 bg-green-200 py-1" >
+                正在售票中
+              </div>
+              <div v-else-if="item.flightState == 2" class="px-2.5 flex items-center ml-3 bg-blue-300 py-1" >
                 正在检票中
+              </div>
+              <div v-else-if="item.flightState == 3" class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
+                飞行中
+              </div>
+              <div v-else class="px-2.5 flex items-center ml-3 bg-gray-400 py-1" >
+                航班已经结束
               </div>
             </div>
           </div>

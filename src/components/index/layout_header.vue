@@ -64,13 +64,13 @@
                       </div>
                       <!-- 售票状态-->
                       <div class="w-1/5 flex justify-center">
-                        <div v-if="item.flightState === 1" class="px-2.5 flex items-center ml-3 bg-green-200 py-1" >
+                        <div v-if="item.flightState === '1'" class="px-2.5 flex items-center ml-3 bg-green-200 py-1" >
                           正在售票中
                         </div>
-                        <div v-else-if="item.flightState === 2" class="px-2.5 flex items-center ml-3 bg-blue-300 py-1" >
+                        <div v-else-if="item.flightState === '2'" class="px-2.5 flex items-center ml-3 bg-blue-300 py-1" >
                           正在检票中
                         </div>
-                        <div v-else-if="item.flightState === 3" class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
+                        <div v-else-if="item.flightState === '3'" class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
                           飞行中
                         </div>
                         <div v-else class="px-2.5 flex items-center ml-3 bg-gray-400 py-1" >
@@ -80,7 +80,7 @@
                       <div class="w-1/6 flex justify-center">
                         <div class="px-1.5 flex items-center ml-3 ">
 
-                          <a-button v-if="item.flightState === 1" type="primary">
+                          <a-button v-if="item.flightState === '1'" type="primary">
                             <air-link :type="2" :path="`/#/buy?flightId=${item.flightId}`">立即购票</air-link>
                           </a-button>
                           <a-button v-else type="danger" @click="removeCar(item.id)">

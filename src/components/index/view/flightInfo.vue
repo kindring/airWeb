@@ -12,6 +12,22 @@
             <div class="text-3xl text-green-300">航班-{{flightData.flightName}}</div>
             <div class="text-sm text-gray-400">airCode-{{flightData.airCode}}</div>
           </div>
+          <div class="flex py-2 mt-2 items-center">
+            航班状态:
+            <div v-if="flightData.flightState === '1'" class="px-2.5 flex items-center ml-3 bg-green-200 py-1" >
+              正在售票中
+            </div>
+            <div v-else-if="flightData.flightState === '2'" class="px-2.5 flex items-center ml-3 bg-blue-300 py-1" >
+              正在检票中
+            </div>
+            <div v-else-if="flightData.flightState === '3'" class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
+              飞行中
+            </div>
+            <div v-else class="px-2.5 flex items-center ml-3 bg-gray-400 py-1" >
+              航班已经结束
+            </div>
+          </div>
+
             <div class="flex py-2 relative right-1">
               <div class="px-12 h-14 flex items-center bg-blue-300 text-xl"> {{flightData.routeType==1?'国内':'国际'}}航线</div>
               <div class="w-14 h-14 bg-yellow-300 rounded-full relative right-7">
@@ -97,8 +113,8 @@
             </div>
 
             <div class="flex">
-              <a-button class="bg-red-600 text-white mx-3">加入购物车</a-button>
-              <a-button class="bg-red-600 text-white mx-3">直接购买</a-button>
+              <a-button :disabled="flightData.flightState!=='1'" class="bg-red-600 text-white mx-3" @click="addCar" >加入购物车</a-button>
+              <a-button :disabled="flightData.flightState!=='1'" class="bg-red-600 text-white mx-3">直接购买</a-button>
             </div>
         </div>
         <template v-slot:loadFail>
@@ -124,6 +140,9 @@ import business from "@/utils/business";
 import Loading from "@components/public/loading";
 import FlightAd from "@components/index/components/flightAd";
 import ProgressBar from "@components/public/progressBar";
+import api_user from "@/apis/api_user";
+import {mapActions} from "vuex";
+import types from "@/store/homeTypes";
 export default {
   name: "flightInfo",
   components: {ProgressBar, FlightAd, Loading, AirLink},
@@ -150,6 +169,9 @@ export default {
   },
   methods:{
     moment,
+    ...mapActions({
+      loadCar: types.user.actions.loadCar,
+    }),
     async loadInfo(){
       if(!this.flightId){
         return this.$message.error('请输入航班id');
@@ -177,6 +199,17 @@ export default {
       console.log(`day: ${day} h:${h} m:${m} s:${s}`)
       this.flightTime = `${day?day+'天-':''}${h}小时-${m}分-${s}秒`
 
+    },
+    async addCar(){
+      let [err,response] = await handle(api_user.addCar(this.flightId));
+      let recodeMeta = business.checkResponseRcode(response,err);
+      if(!recodeMeta.ok){
+        return this.$message.error(recodeMeta.msg);
+      }
+      this.$message.success('添加至购物车成功');
+      setTimeout(()=>{
+        this.loadCar();
+      },1500)
     }
   }
 }

@@ -84,13 +84,23 @@ function loadInfo(url=`/user/api/info`){
 function loadCar(url = '/user/api/cars'){
     return axios.get(url);
 }
+// 新增航班到购物车
+function addCar(flightId,url='/user/api/car/add'){
+    return axios.post(url,{flightId:flightId});
+}
+// 移除购物车
+function removeCar(carId,url='/user/api/car/remove'){
+    return axios.post(url,{carId:carId});
+}
 export default {
     adminLogin,
     checkAccount,
     register,
     login,
+    loadInfo,
     loadCar,
-    loadInfo
+    addCar,
+    removeCar
 }
 
 
