@@ -36,9 +36,10 @@ export default {
         if(!recodeMeta.ok){
             return recodeMeta;
         }
-        console.log(recodeMeta.res);
+        let arr = recodeMeta.res.data
         context.commit(types.mutations.isLogin,true);
-        context.commit(types.mutations.setCar,recodeMeta.res.data);
+        console.log(arr)
+        context.commit(types.mutations.setCar,arr);
         return recodeMeta;
     }
 }

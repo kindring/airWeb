@@ -64,16 +64,16 @@
                       </div>
                       <!-- 售票状态-->
                       <div class="w-1/5 flex justify-center">
-                        <div v-if="item.flightState === 1" class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
+                        <div v-if="item.flightState === 1" class="px-2.5 flex items-center ml-3 bg-green-200 py-1" >
                           正在售票中
                         </div>
-                        <div v-else-if="item.flightState === 2" class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
+                        <div v-else-if="item.flightState === 2" class="px-2.5 flex items-center ml-3 bg-blue-300 py-1" >
                           正在检票中
                         </div>
                         <div v-else-if="item.flightState === 3" class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
                           飞行中
                         </div>
-                        <div v-else class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
+                        <div v-else class="px-2.5 flex items-center ml-3 bg-gray-400 py-1" >
                           航班已经结束
                         </div>
                       </div>
@@ -81,7 +81,7 @@
                         <div class="px-1.5 flex items-center ml-3 ">
 
                           <a-button v-if="item.flightState === 1" type="primary">
-                            <air-link :type="2" :path="`#/info?flightId=${item.id}`">立即购票</air-link>
+                            <air-link :type="2" :path="`/#/buy?flightId=${item.flightId}`">立即购票</air-link>
                           </a-button>
                           <a-button v-else type="danger" @click="removeCar(item.id)">
                             移出购物车
@@ -89,8 +89,8 @@
                         </div>
                       </div>
                     </div>
-                    <div class="w-full my-2">
-                      <air-link class="w-10/12 py-1.5 flex justify-center items-center" :type="2" path="/user#/car">更多购物车项</air-link>
+                    <div class="w-full my-2 flex justify-center">
+                      <air-link class="w-10/12 py-1.5 flex justify-center items-center bg-red-400 text-white" :type="2" path="/#/cars">查看更多</air-link>
                     </div>
                   </div>
                   <div class="w-72 h-48 flex justify-center items-center" v-else>
@@ -102,7 +102,7 @@
               <div class="flex items-center">
                 <air-link
                     :type="2"
-                    :path="'/user#/car'"
+                    :path="'/#/cars'"
                     class="menu-item pl-3 w-full flex items-center hover:bg-blue-400  hover:text-white "
                 >
                   <svg-icon
@@ -116,7 +116,7 @@
             </a-popover>
           </div>
           <air-link
-              :type="2"
+              :type="isLogin?1:2"
               :path="isLogin?'/user':'login'"
               class="menu-item pl-3 w-full flex items-center w-12 md:w-28 lg:w-40 cursor-pointer hover:bg-blue-400  hover:text-white "
           >
@@ -139,6 +139,9 @@ import AirLink from "@components/public/airLink";
 import {mapActions, mapGetters, mapState} from "vuex";
 import types from "@/store/homeTypes";
 import api_user from "@/apis/api_user";
+import handle from "@/utils/handle";
+import business from "@/utils/business";
+import code from "@/mapField/rcodeMap";
 export default {
   name: "layout_header",
   components: {AirLink},
@@ -206,7 +209,12 @@ export default {
       loadCar: types.user.actions.loadCar,
     }),
     async removeCar(id){
-      api_user.removeCar
+      let [err,response] = await handle(api_user.removeCar(id));
+      let recodeMeta = business.checkResponseRcode(response,err);
+      if(!recodeMeta.ok){
+        return this.$message.error(recodeMeta.msg);
+      }
+      console.log('移除成功')
     },
     // 移除指定购物车
     removeCarHandle(id){

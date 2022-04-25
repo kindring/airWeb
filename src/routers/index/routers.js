@@ -1,6 +1,9 @@
 import airHome from "../../components/index/view/airHome.vue";
 import flightSearch from "@components/index/view/flightSearch";
 import flightInfo from "@components/index/view/flightInfo";
+import userCar from "@components/index/view/userCar";
+import user from '@components/index/view/user';
+import orders from '@components/index/view/orders';
 const routers = [{
     id: '/',
     text: '首页',
@@ -27,6 +30,33 @@ const routers = [{
         name: '航班信息',
         meta:{title:"航班信息"},
         component: flightInfo,
+    },
+    {
+        id: '/cars',
+        text: '购物车',
+        is_menu: true,
+        path: '/cars',
+        name: '购物车',
+        meta:{title:"购物车"},
+        component: userCar,
+    },
+    {
+        id: '/user',
+        text: '用户中心',
+        is_menu: true,
+        path: '/user',
+        name: '用户中心',
+        meta:{title:"用户中心"},
+        component: user,
+    },
+    {
+        id: '/orders',
+        text: '我的订单',
+        is_menu: true,
+        path: '/orders',
+        name: '我的订单',
+        meta:{title:"我的订单"},
+        component: orders,
     },
 ]
 

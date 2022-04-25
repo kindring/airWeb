@@ -1,5 +1,6 @@
 import types from './type'
 import field from '@/mapField/field'
+import Vue from "vue";
 export default {
     // 设置航线列表
     [types.mutations.setUser]: (state, user) => {
@@ -29,6 +30,8 @@ export default {
         console.log(state[types.state.routeType])
     },
     [types.mutations.setCar]: (state,v)=>{
+
         state[types.state.cars] = v;
+        return state[types.state.cars]
     }
 }
