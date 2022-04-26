@@ -114,7 +114,9 @@
 
             <div class="flex">
               <a-button :disabled="flightData.flightState!=='1'" class="bg-red-600 text-white mx-3" @click="addCar" >加入购物车</a-button>
-              <a-button :disabled="flightData.flightState!=='1'" class="bg-red-600 text-white mx-3">直接购买</a-button>
+              <a-button :disabled="flightData.flightState!=='1'" class="bg-red-600 text-white mx-3">
+                <air-link :type="2" :path="`/#/buy?flightId=${flightId}`">立即购买</air-link>
+              </a-button>
             </div>
         </div>
         <template v-slot:loadFail>

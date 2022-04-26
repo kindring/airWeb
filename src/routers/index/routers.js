@@ -4,6 +4,7 @@ import flightInfo from "@components/index/view/flightInfo";
 import userCar from "@components/index/view/userCar";
 import user from '@components/index/view/user';
 import orders from '@components/index/view/orders';
+import buy from '@components/index/view/buy'
 const routers = [{
     id: '/',
     text: '首页',
@@ -57,6 +58,15 @@ const routers = [{
         name: '我的订单',
         meta:{title:"我的订单"},
         component: orders,
+    },
+    {
+        id: '/buy',
+        text: '创建机票订单',
+        is_menu: true,
+        path: '/buy',
+        name: '创建机票订单',
+        meta:{title:"创建机票订单"},
+        component: buy,
     },
 ]
 
