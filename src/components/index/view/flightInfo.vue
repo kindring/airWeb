@@ -209,7 +209,7 @@ export default {
       this.$message.success('添加至购物车成功');
       setTimeout(()=>{
         this.loadCar();
-      },1500)
+      },700)
     }
   }
 }

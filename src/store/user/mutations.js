@@ -7,6 +7,7 @@ export default {
         // console.log(user);
         state[types.state.userId] = user.id;
         state[types.state.nickName] = user.nickName;
+        state[types.state.phone] = user.phone;
     },
     [types.mutations.isLogin]: (state, b) => {
         state[types.state.isLogin] = b;

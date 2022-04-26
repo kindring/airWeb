@@ -79,7 +79,13 @@ function login(account,passwd,captcha,url = `/user/login`){
 function loadInfo(url=`/user/api/info`){
     return axios.get(url);
 }
-
+// 修改用户手机号
+function changePhone(phone,passwd,url=`/user/api/changePhone`){
+    return axios.post(url,{
+        phone,
+        passwd
+    });
+}
 // 加载用户购物车
 function loadCar(url = '/user/api/cars'){
     return axios.get(url);
@@ -96,6 +102,7 @@ export default {
     adminLogin,
     checkAccount,
     register,
+    changePhone,
     login,
     loadInfo,
     loadCar,

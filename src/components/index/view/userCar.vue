@@ -43,7 +43,7 @@
             <div class="w-1/6 flex justify-center">
               <div class="px-1.5 flex items-center ml-3 ">
 
-                <a-button v-if="item.flightState === 1" type="primary">
+                <a-button v-if="item.flightState === '1'" type="primary">
                   <air-link :type="2" :path="`/#/buy?flightId=${item.flightId}`">立即购买</air-link>
                 </a-button>
                 <a-button v-else type="danger" @click="removeCar(item.id)">

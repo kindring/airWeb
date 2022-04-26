@@ -3,6 +3,7 @@ const state = {
     // 是否登录
     isLogin: 'STATE_IS_LOGIN',
     nickName: 'STATE_NICK_NAME',
+    phone: 'STATE_PHONE',
     userId: 'STATE_USER_ID',
     // 出发城市
     departureCity: 'STATE_USER_DEPARTURE_CITY',
@@ -16,6 +17,7 @@ const state = {
     routeType: 'STATE_ROUTE_TYPE',
     // 购物车
     cars: 'STATE_USER_CAR',
+    orders: "STATE_USER_ORDERS"
 }
 
 const mutations = {

@@ -9,12 +9,16 @@ function registerHandle(rcode,handle){
 // 1. 获取当前url地址
 // 2. 存储sessionStore
 // 3. 自动前往登陆页
-function toLogin(){
+function toLogin(newUrl){
     let nowUrl = window.location.href;
     window.sessionStorage.setItem('lastUrl',nowUrl);
     // 刷新页面
     setTimeout(()=>{
-        window.location.reload();
+        if(newUrl){
+            window.location.href = newUrl
+        }else{
+            window.location.reload();
+        }
         // window.location.href = '/login';
     },3000)
 }

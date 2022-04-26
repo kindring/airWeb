@@ -33,12 +33,15 @@ export default {
     }),
   },
   mounted(){
-    if(!this.isLogin){
-      this.$message.warn('未登录请先登录.')
-      return setTimeout(()=>{
-        business.toLogin();
-      },2000)
-    }
+    setTimeout(()=>{
+      if(!this.isLogin){
+        this.$message.warn('未登录请先登录.')
+        return setTimeout(()=>{
+          business.toLogin('/login');
+        },500)
+      }
+    },2300)
+
   },
   methods: {
 
