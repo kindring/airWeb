@@ -333,13 +333,13 @@ export default {
     disabledRangeTime(_, type) {
       if (type === 'start') {
         return {
-          disabledHours: () => this.range(0, 60).splice(4, 20),
+          disabledHours: () => this.range(0, 60).splice(1, 0),
           disabledMinutes: () => this.range(30, 60),
           disabledSeconds: () => [55, 56],
         };
       }
       return {
-        disabledHours: () => this.range(0, 60).splice(20, 4),
+        disabledHours: () => this.range(0, 60).splice(0, 0),
         disabledMinutes: () => this.range(0, 31),
         disabledSeconds: () => [55, 56],
       };
