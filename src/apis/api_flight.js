@@ -56,6 +56,27 @@ function searchSellFlights(searchOptions,url = '/api/flight/sells'){
 function sellFlights(url = '/api/flight/sellist'){
     return axios.get(url);
 }
+
+function addAir(airCode,airRow,airCol,url = '/api/flight/air/add'){
+    return axios.post(url, {
+        airCode:airCode,
+        row: airRow,
+        col: airCol
+    });
+}
+
+function airs(state,url = '/api/flight/airs'){
+    url+=`?state=${state}`
+    return axios.get(url);
+}
+
+function changeAir(airId,params,url = '/api/flight/air/change'){
+    return axios.post(url,{
+        airId:airId,
+        params: params
+    });
+}
+
 export default {
     searchFlights,
     flightList,
@@ -65,7 +86,10 @@ export default {
     setState,
     searchSellFlights,
     sellFlights,
-    news
+    news,
+    addAir,
+    airs,
+    changeAir
 }
 
 

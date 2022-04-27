@@ -19,5 +19,11 @@ export default {
     cityType_domestic:1,
     // 国际城市
     cityType_international:2,
+    // 启用的飞机
+    airState_all: 0,
+    // 启用的飞机
+    airState_enable: 1,
+    // 停用的飞机
+    airState_disable: 2,
 
 }

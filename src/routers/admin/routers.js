@@ -6,6 +6,8 @@ import addRecommend from "@components/admin/view/addRcommend.vue";
 import flights from '@components/admin/view/flights'
 import addFlight from '@components/admin/view/addFlight'
 import logout from '@/components/admin/view/logout'
+import addAir from '@/components/admin/view/addAir'
+import airs from '@/components/admin/view/airs'
 const routers = [{
     id: '/',
     text: '航班管理系统',
@@ -54,8 +56,8 @@ const routers = [{
         text: '修改航班',
         is_menu: true,
         path: '/editFlight',
-        name: '新增航班',
-        meta:{title:"新增航班"},
+        name: '修改航班',
+        meta:{title:"修改航班"},
         component: addFlight,
     },
     {
@@ -66,6 +68,24 @@ const routers = [{
         name: '新增推荐',
         meta:{title:"新增推荐"},
         component: addRecommend,
+    },
+    {
+        id: '/addAir',
+        text: '新增飞机',
+        is_menu: true,
+        path: '/addAir',
+        name: '新增飞机',
+        meta:{title:"新增飞机"},
+        component: addAir,
+    },
+    {
+        id: '/airs',
+        text: '飞机列表',
+        is_menu: true,
+        path: '/airs',
+        name: '飞机列表',
+        meta:{title:"飞机列表"},
+        component: airs,
     },
     {
         id: '/logout',

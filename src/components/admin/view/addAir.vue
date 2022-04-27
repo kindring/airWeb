@@ -1,47 +1,67 @@
 <template>
   <div class="w-full">
-    <round-title>新增城市</round-title>
+    <round-title>新增飞机</round-title>
     <table-layout >
-      <template #header>请输入城市信息</template>
+      <template #header>请输入飞机信息</template>
       <a-form-model
-          class="relative"
+          class="relative pb-3"
           ref="ruleForm"
           :model="form"
           :rules="rules"
           :label-col="labelCol"
           :wrapper-col="wrapperCol"
       >
-        <!--            城市名-->
+        <!--            飞机代号-->
         <a-form-model-item
             class="mt-6"
-            ref="cityName"
-            label="城市名"
+            ref="airCode"
+            label="飞机代号"
             has-feedback
             prop="cityName">
           <a-input
               class="w-full"
-              v-model="form.cityName"
-              placeholder="请输入城市名"
+              v-model="form.airCode"
+              placeholder="请输入飞机代号"
               @blur="
                   () => {
-                    $refs.cityName.onFieldBlur();
+                    $refs.airCode.onFieldBlur();
                   }
                 "
           />
         </a-form-model-item>
-        <!--            用户密码-->
+        <!--            飞机行数 -->
         <a-form-model-item
             class="mt-2"
-            ref="cityType"
-            label="城市类型"
+            ref="airRow"
+            label="座位行数"
             has-feedback
-            prop="cityType">
-          <table-select
-              class="w-48"
-              :options="cityTypes"
-              v-model="form.cityType"
-              keystr="cityType">
-          </table-select>
+            prop="airRow">
+          <a-input-number class="w-full"
+                          v-model="form.airRow"
+                          placeholder="座位行数"
+                          step="1"
+                          @blur="
+                  () => {
+                    $refs.airRow.onFieldBlur();
+                  }
+                "></a-input-number>
+        </a-form-model-item>
+        <!--            每行多少排 -->
+        <a-form-model-item
+            class="mt-2"
+            ref="airCol"
+            label="每排座位"
+            has-feedback
+            prop="airCol">
+          <a-input-number class="w-full"
+                          v-model="form.airCol"
+                          placeholder="每排座位"
+                          step="1"
+                          @blur="
+                  () => {
+                    $refs.airCol.onFieldBlur();
+                  }
+                "></a-input-number>
         </a-form-model-item>
 
         <!--             提交按钮            -->
@@ -52,7 +72,7 @@
           <a-col>
             <a-button-group>
               <a-button @click="resetForm">重置</a-button>
-              <a-button type="primary" @click="submitHandle">增加城市</a-button>
+              <a-button type="primary" @click="submitHandle">增加飞机</a-button>
             </a-button-group>
           </a-col>
         </a-row>
@@ -70,34 +90,29 @@ import TableSelect from "@components/admin/components/tableSelect";
 import handle from "@/utils/handle";
 import userApi from "@/apis/api_user";
 import business from "@/utils/business";
-import api_city from "@/apis/api_city";
+import api_flight from "@/apis/api_flight";
+import AirLink from "@components/public/airLink";
 export default {
   name: "addAir",
-  components: {TableSelect, tableLayout, RoundTitle},
+  components: { tableLayout, RoundTitle},
   data(){
     return {
       labelCol: { span: 4 },
       wrapperCol: { span: 16 },
       form: {
-        cityName: '',
-        cityType: fields.cityType_domestic,
+        airCode: '',
+        airRow: 0,
+        airCol: 0,
       },
-      cityTypes:[
-        {
-          text:'国内城市',
-          value: fields.cityType_domestic
-        },
-        {
-          text:'国际城市',
-          value: fields.cityType_international
-        }
-      ],
       rules: {
-        cityName: [
-          {required: 'true',message: '请输入城市名称'},
+        airCode: [
+          {required: 'true',message: '请输入飞机代号'},
         ],
-        cityType: [
-          {required:'true',message:'请选择城市类型'}
+        airRow: [
+          {required:'true',message:'请输入航班行数'}
+        ],
+        airCol: [
+          {required:'true',message:'请输入每排座位数'}
         ],
       }
     }
@@ -105,22 +120,24 @@ export default {
   methods:{
     // 重置表单
     resetForm(){
-      this.form.cityName = '';
-      this.form.cityType = fields.cityType_domestic;
+      this.form.airCode = '';
+      this.form.airRow = 0;
+      this.form.airCol = 0;
     },
     async submitHandle(e) {
-      let cityName = this.form.cityName;
-      let cityType = this.form.cityType;
+      let airCode = this.form.airCode;
+      let airRow = this.form.airRow;
+      let airCol = this.form.airCol;
       // console.log(cityName,cityType);
-      let [err,response] = await handle(api_city.addCity(cityType,cityName));
+      let [err,response] = await handle(api_flight.addAir(airCode,airRow,airCol));
       console.log(response);
       let rcodeMean = business.checkResponseRcode(response,err);
       if(rcodeMean.ok){
         // 登陆成功
-        this.$message.success(`添加城市成功`);
+        this.$message.success(`添加飞机成功`);
         this.countDown();
       }else{
-        this.$message.error('添加城市失败')
+        this.$message.error('添加飞机失败')
         this.$message[rcodeMean.type](rcodeMean.msg);
       }
     },
@@ -128,15 +145,15 @@ export default {
     countDown() {
       let that=this;
       const modal = this.$success({
-        title: '新增城市成功',
-        content: `新城市添加成功,.`,
-        okText:'跳转城市列表',
+        title: '新增飞机成功',
+        content: `新飞机添加成功,.`,
+        okText:'跳转飞机列表',
         cancelText: '继续添加',
         onCancel() {
           that.resetForm();
         },
         onOk() {
-          that.$router.push('/citys');
+          that.$router.push('/airs');
         },
       });
     },

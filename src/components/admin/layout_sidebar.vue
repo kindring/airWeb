@@ -54,6 +54,14 @@ export default {
               router: '/citys'
             },
             {
+              text: '新增飞机',
+              router: '/addAir'
+            },
+            {
+              text: '飞机列表',
+              router: '/airs'
+            },
+            {
               text: '查看航班',
               router: '/flights'
             },

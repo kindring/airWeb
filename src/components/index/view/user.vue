@@ -24,6 +24,12 @@
           <a-button type="" @click="showPop">修改绑定手机号</a-button>
         </div>
       </div>
+      <div class="py-1.5 ">
+        <div class="py-1 text-xl">我的乘车人</div>
+        <div class="flex">
+
+        </div>
+      </div>
     </div>
   </div>
     <pop :show="editPopShow" :loading="editLoading">
@@ -46,6 +52,7 @@ export default {
     return {
       editPopShow: false,
       editLoading: true,
+      travels:[],
     }
   },
   computed:{

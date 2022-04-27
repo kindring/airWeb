@@ -7,54 +7,36 @@
           class="relative"
           ref="ruleForm"
           :model="form"
-          :rules="rules"
           :label-col="labelCol"
           :wrapper-col="wrapperCol"
       >
         <!--            航班名-->
         <a-form-model-item
             class="mt-6"
-            ref="flightName"
-            label="航班名"
-            has-feedback
-            prop="flightName">
+            label="航班名">
           <a-input
               class="w-full"
               v-model="form.flightName"
               placeholder="请输入航班名"
-              @blur="
-                  () => {
-                    $refs.flightName.onFieldBlur();
-                  }
-                "
           />
         </a-form-model-item>
         <!--            飞机代号-->
         <a-form-model-item
             class="mt-6"
-            ref="airCode"
-            label="飞机代号"
-            has-feedback
-            prop="airCode">
-          <a-input
-              class="w-full"
-              v-model="form.airCode"
-              placeholder="请输入飞机代号"
-              @blur="
-                  () => {
-                    $refs.airCode.onFieldBlur();
-                  }
-                "
-          />
+            label="飞机">
+          <table-select
+              :options="airOptions"
+              v-model="form.airId"
+              @change="editAir"
+          >
+          </table-select>
         </a-form-model-item>
 
         <!--            价格-->
         <a-form-model-item
             class="mt-2"
             ref="originalPrice"
-            label="机票原价"
-            has-feedback
-            prop="originalPrice">
+            label="机票原价">
           <a-input-number
               class="w-full"
               :default-value="1000"
@@ -70,10 +52,7 @@
         <!--            优惠价格-->
         <a-form-model-item
             class="mt-2"
-            ref="currentPrice"
-            label="当前价格"
-            has-feedback
-            prop="currentPrice">
+            label="当前价格">
           <a-input-number
               class="w-full"
               :default-value="1000"
@@ -89,10 +68,7 @@
 <!--        机票数量-->
         <a-form-model-item
             class="mt-2"
-            ref="totalVotes"
-            label="机票数量"
-            has-feedback
-            prop="totalVotes">
+            label="机票数量">
           <div class="flex w-full">
             <div class="w-1/12 flex justify-center items-center" v-if="flightId">
               已售{{ flightData.pay}}/
@@ -101,7 +77,7 @@
                 class="w-11/12"
                 :default-value="100"
                 :min="0"
-                :max="150"
+                :max="maxVotes"
                 step="1"
                 v-model="form.totalVotes"
             />
@@ -112,10 +88,7 @@
         <!--            起始时间-->
         <a-form-model-item
             class="mt-2"
-            ref="currentPrice"
-            label="起始时间"
-            has-feedback
-            prop="currentPrice">
+            label="起始时间">
           <a-range-picker
               :disabled-date="disabledDate"
               :disabled-time="disabledRangeTime"
@@ -131,10 +104,7 @@
         <!--            起始城市-->
         <a-form-model-item
             class="mt-2"
-            ref="currentPrice"
-            label="起始城市"
-            has-feedback
-            prop="currentPrice">
+            label="起始城市">
           <div class="flex items-center">
 <!--            出发城市-->
             <a-switch class="mt-4"
@@ -206,9 +176,6 @@
 
       </a-form-model>
     </table-layout>
-    <pop>
-
-    </pop>
   </div>
 </template>
 
@@ -239,7 +206,7 @@ export default {
       wrapperCol: { span: 16 },
       form: {
         flightName: '',
-        airCode: '',
+        airId: 1,
         originalPrice: 0,
         currentPrice: 0,
         times:[
@@ -286,7 +253,12 @@ export default {
       // 目标城市可选类型
       targetTypeIsDomestic: true,
       // 航班具体数据
-      flightData: {}
+      flightData: {},
+      // 飞机数量
+      airs:[],
+      airOptions: [],
+      // 飞机最大票数
+      maxVotes: 0,
     }
   },
   computed:{
@@ -299,6 +271,7 @@ export default {
   },
   async mounted(){
     console.log(this.$route.query);
+    await this.loadAirs();
     if(this.$route.query&&this.$route.query.flightId){
       this.flightId = this.$route.query.flightId;
       this.pageText = '编辑航班信息';
@@ -344,7 +317,23 @@ export default {
         disabledSeconds: () => [55, 56],
       };
     },
-
+    async loadAirs(){
+      let [err,response] = await handle(api_flight.airs(fields.airState_enable));
+      let {ok,msg,res} = business.checkResponseRcode(response,err);
+      this.loading =false;
+      if(!ok){return this.$message.error(msg)}
+      if(res.data.length<1){
+        this.$message.error('请先添加飞机后在来添加航班');
+        return this.$router.push('/airs');
+      }
+      this.airs = res.data;
+      if(!this.flightId){
+        this.editAir(res.data[0].id)
+      }
+      this.airOptions = res.data.map(air=>{
+        return {text:air.airCode,value:air.id}
+      })
+    },
     // 直接按照类型进行切换出发和结束城市
     cityTypeChange(first){
       console.log('修改类型')
@@ -404,7 +393,7 @@ export default {
       })
     },
     // 加载航班具体数据
-    async loadFlight(){
+    async airId(){
       if(!this.flightId){
         return this.$message.info('没有id拒绝获取机票信息')
       }
@@ -415,9 +404,10 @@ export default {
       if(err)return this.$message.error(msg);
       res.data;
       this.$message.success('航班数据加载完成');
+      this.maxVotes = res.data.maxTotalVotes;
       this.flightData = res.data;
       this.form.flightName = res.data.flightName;
-      this.form.airCode = res.data.airCode;
+      this.form.airId = res.data.airId;
       this.form.originalPrice = res.data.originalPrice;
       this.form.currentPrice = res.data.currentPrice;
       this.form.departureCity = res.data.departureCity;
@@ -443,6 +433,11 @@ export default {
       this.form.originalPrice = 0;
       this.form.totalVotes = 0;
     },
+    editAir(id){
+      let air = this.airs.find(val=>val.id=id)
+      console.log(air);
+      this.maxVotes = parseInt(air.row) * parseInt(air.col);
+    },
     async submitHandle(e) {
       // 读取数据
       let times = this.form.times,
@@ -452,7 +447,7 @@ export default {
           body.departureCity = this.form.departureCity;
           body.targetCity = this.form.targetCity;
           body.times = this.form.times;
-          body.airCode = this.form.airCode;
+          body.airId = this.form.airId;
           body.flightName = this.form.flightName;
           body.currentPrice = this.form.currentPrice;
           body.originalPrice = this.form.originalPrice;
@@ -474,7 +469,7 @@ export default {
           // 航班名
         if(this.flightData.flightName != this.form.flightName) {changeOption.flightName = this.form.flightName;}
           // 飞机code
-          if(this.flightData.airCode != this.form.airCode) { changeOption.flightName = this.form.flightName;}
+          if(this.flightData.airId != this.form.airId) { changeOption.airId = this.form.airId;}
           // 原价
           if(this.flightData.originalPrice != this.form.originalPrice) {changeOption.originalPrice = this.form.originalPrice;}
           if(this.flightData.currentPrice != this.form.currentPrice) {changeOption.currentPrice = this.form.currentPrice;}

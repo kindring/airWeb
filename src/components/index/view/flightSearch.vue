@@ -72,15 +72,15 @@
             :loading-state="loadingState"
             tip="搜索航班中"
         >
-        <div class="bg-pink-300 w-full px-2 py-1">
+        <div class="bg-pink-100 w-full px-2 py-1">
           <div class="w-full h-96 flex justify-center items-center bg-blue-300" v-if="results.length<1">
             <h1 class="text-white">无法找到对应航班</h1>
           </div>
-          <div class="w-full h-auto flex justify-center" v-else>
+          <div class="w-full h-auto flex justify-center flex-col" v-else>
             <div
                 v-for="flight in results"
                 :key="flight.id"
-                :class="`w-full py-1.5 flex rounded ${flight.routeType==1?'bg-pink-300':'bg-green-200'}`">
+                :class="`w-full py-1.5 my-2 flex rounded ${flight.routeType==1?'bg-pink-300':'bg-green-200'}`">
               <div class="w-1/5 flex items-center">
                 <div class="px-2.5">{{flight.departureCityName}}</div>
                 <svg-icon class="mx-1" icon-class="fly"/>

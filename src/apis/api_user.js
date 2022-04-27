@@ -87,6 +87,7 @@ function changePhone(phone,passwd,url=`/user/api/changePhone`){
     });
 }
 // 加载用户购物车
+// 加载用户购物车
 function loadCar(url = '/user/api/cars'){
     return axios.get(url);
 }
@@ -98,6 +99,49 @@ function addCar(flightId,url='/user/api/car/add'){
 function removeCar(carId,url='/user/api/car/remove'){
     return axios.post(url,{carId:carId});
 }
+
+/**
+ * 获取用户的乘机人
+ * @param url
+ * @returns {Promise<AxiosResponse<any>>|*}
+ */
+function travels(url = '/user/api/travels'){
+    return axios.get(url);
+}
+
+/**
+ * 新增乘机人
+ * @param name
+ * @param card
+ * @param phone
+ * @param url
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+function addTravel(name,card,phone,url='/user/api/travel/add'){
+    return axios.post(url,{
+        name:name,
+        card: card,
+        phone: phone
+    });
+}
+
+/**
+ * 修改乘机人信息
+ * @param travelId 乘机人id
+ * @param passwd 用户登陆密码
+ * @param params 要修改的信息
+ * @param url
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+function changeTravel(travelId,passwd,params,url='/user/api/travel/change'){
+    return axios.post(url,{
+        travelId:travelId,
+        passwd:passwd,
+        params:params
+    });
+}
+
+
 export default {
     adminLogin,
     checkAccount,
@@ -107,7 +151,10 @@ export default {
     loadInfo,
     loadCar,
     addCar,
-    removeCar
+    removeCar,
+    travels,
+    addTravel,
+    changeTravel
 }
 
 
