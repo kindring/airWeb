@@ -24,16 +24,46 @@
           <a-button type="" @click="showPop">修改绑定手机号</a-button>
         </div>
       </div>
-      <div class="py-1.5 ">
-        <div class="py-1 text-xl">我的乘车人</div>
-        <div class="flex">
-
+      <div class="py-1.5 mx-1 w-2/4 px-0.5 my-2 rounded border border-white shadow">
+        <div class="py-1 text-xl border-b border-red-300 ">我的乘车人</div>
+        <div class="py-1">
+          <div
+              v-for="item in travels"
+              :key="item.id"
+              class="flex border-b py-2 items-center">
+            <div class="w-24 px-2">
+              {{item.name}}
+            </div>
+            <div class="w-36 px-2">
+              {{item.card}}
+            </div>
+            <div class="w-24 px-2">
+              {{item.phone}}
+            </div>
+            <div class="w-24 px-2">
+              <a-button @click="editTravel(item)">修改乘车人</a-button>
+            </div>
+          </div>
+        </div>
+        <div class="py-1 flex justify-center">
+          <a-button class="w-9/12" @click="addTravel">新增乘车人</a-button>
         </div>
       </div>
     </div>
   </div>
     <pop :show="editPopShow" :loading="editLoading">
       <change-phone @ok="okHandle" @cancel="cancelHandle"></change-phone>
+    </pop>
+    <pop :show="editTravelShow" :loading="editTravelLoading">
+      <add-travel
+      :travel-id="travelId"
+      :name="travelName"
+      :card="travelCard"
+      :phone="travelPhone"
+      @ok="okTravelHandle" @cancel="cancelTravelHandle"
+      >
+
+      </add-travel>
     </pop>
   </layout_user>
 </template>
@@ -45,13 +75,23 @@ import {mapActions, mapMutations, mapState} from "vuex";
 import types from "@/store/homeTypes";
 import AirLink from "@components/public/airLink";
 import ChangePhone from "@components/index/components/changePhone";
+import handle from "@/utils/handle";
+import api_user from "@/apis/api_user";
+import business from "@/utils/business";
+import AddTravel from "@components/index/components/addTravel";
 export default {
   name: "user",
-  components: {ChangePhone, AirLink, layout_user,pop},
+  components: {AddTravel, ChangePhone, AirLink, layout_user,pop},
   data(){
     return {
       editPopShow: false,
       editLoading: true,
+      editTravelShow: false,
+      editTravelLoading: true,
+      travelId: '',
+      travelName: '',
+      travelCard: '',
+      travelPhone: '',
       travels:[],
     }
   },
@@ -65,6 +105,9 @@ export default {
       orders: state=>state.user[types.user.state.orders]
       // 用户选择的
     }),
+  },
+  mounted(){
+    this.loadTravel();
   },
   methods:{
     ...mapActions({
@@ -82,6 +125,42 @@ export default {
       this.editLoading = true;
       await this.loadUser();
       this.cancelHandle();
+    },
+    // 加载乘客
+    async loadTravel(){
+      let [err,response] = await handle(api_user.travels());
+      let {ok,msg,res} = business.checkResponseRcode(response,err);
+      if(!ok){
+        return this.$message.error(msg);
+      }
+      this.travels = res.data;
+    },
+    showTravelPop(){
+      this.editTravelShow=true;
+      this.editTravelLoading = false;
+    },
+    addTravel(){
+      this.travelId = '';
+      this.travelName = ''
+      this.travelCard = ''
+      this.travelPhone = ''
+      this.showTravelPop()
+    },
+    editTravel(travel){
+      this.travelId = travel.id;
+      this.travelName = travel.name;
+      this.travelCard = travel.card;
+      this.travelPhone = travel.phone;
+      this.showTravelPop()
+    },
+    cancelTravelHandle(){
+      this.editTravelLoading = false;
+      this.editTravelShow= false;
+    },
+    async okTravelHandle(){
+      this.editTravelLoading = true;
+      await this.loadTravel();
+      this.cancelTravelHandle();
     }
   }
 }

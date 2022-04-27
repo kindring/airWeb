@@ -128,19 +128,24 @@ function addTravel(name,card,phone,url='/user/api/travel/add'){
 /**
  * 修改乘机人信息
  * @param travelId 乘机人id
- * @param passwd 用户登陆密码
  * @param params 要修改的信息
  * @param url
  * @returns {Promise<AxiosResponse<any>>}
  */
-function changeTravel(travelId,passwd,params,url='/user/api/travel/change'){
+function changeTravel(travelId,params,url='/user/api/travel/change'){
+    console.log(...arguments);
     return axios.post(url,{
         travelId:travelId,
-        passwd:passwd,
         params:params
     });
 }
 
+function travelInfo(passwd,travelId,url = '/user/api/travel/info'){
+    return axios.post(url,{
+        travelId:travelId,
+        passwd:passwd,
+    });
+}
 
 export default {
     adminLogin,
@@ -154,7 +159,8 @@ export default {
     removeCar,
     travels,
     addTravel,
-    changeTravel
+    changeTravel,
+    travelInfo
 }
 
 
