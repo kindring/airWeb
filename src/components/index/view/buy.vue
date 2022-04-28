@@ -20,7 +20,21 @@
             飞机代号:{{flightData.airCode}}
           </div>
           <div class="py-2 flex">
-            乘机人:{{nickName}} ,登机手机号:{{phone}}
+            乘车人:
+            <div class="w-64 ml-2">
+              <a-select
+                  mode="multiple"
+                  placeholder="选择乘车人"
+                  :value="selectedTravels"
+                  style="width: 100%"
+                  @change="handleTravelChange"
+              >
+                <a-select-option v-for="item in travelOptions" :key="'travel-'+item.value" :value="item.value">
+                  {{ item.text }}
+                </a-select-option>
+              </a-select>
+            </div>
+            <a-button class="mx-2" @click="showTravelPop">新增乘车人</a-button>
           </div>
           <!--          出发时间地点-->
           <a-timeline class="mt-2">
@@ -43,9 +57,6 @@
               <div class="px-2.5 w-2/4 relative top-1 rounded py-1 flex bg-green-300 overflow-hidden text-white">
                 <div class="text-black py-0.5 flex items-center text-5xl">
                   <b><svg-icon class="mx-1" icon-class="dz"/></b>
-                </div>
-                <div class="div px-3 flex text-3xl items-center">
-                  <b>---</b>
                 </div>
                 <div class="text-black">
                   <div class="py-0.5 text-xl">
@@ -72,10 +83,13 @@
             </div>
           </div>
 
+          <div class="flex py-2 items-center">
+            预计价格: <span class="text-red-700 text-3xl mx-3">{{price}}</span> 元
+          </div>
           <div class="flex py-2.5 border-t">
             <a-button-group>
               <a-button>取消</a-button>
-              <a-button >提交订单</a-button>
+              <a-button @click="createOrder">提交订单</a-button>
             </a-button-group>
           </div>
         </div>
@@ -90,6 +104,13 @@
         </template>
       </loading>
     </div>
+    <pop :show="editTravelShow" :loading="editTravelLoading">
+      <add-travel
+          @ok="okTravelHandle" @cancel="cancelTravelHandle"
+      >
+
+      </add-travel>
+    </pop>
   </div>
 </template>
 
@@ -100,17 +121,28 @@ import business from "@/utils/business";
 import moment from "moment";
 import {mapState} from "vuex";
 import types from "@/store/homeTypes";
+import api_user from "@/apis/api_user";
+import pop from '@/components/public/pop'
+import AddTravel from "@components/index/components/addTravel";
+import Loading from "@components/public/loading";
 
 export default {
   name: "buy",
+  components: {Loading, AddTravel,pop},
   data(){return {
     loadingMessage:'',
     loadingState: 0,
     flightId:null,
+    editTravelShow: false,
+    editTravelLoading: true,
     flightData:{
       sailingTime:null,
       langdinTime:null
     },
+    price: 0,
+    travels: [],
+    selectedTravels:[],
+    travelOptions: []
   }},
   computed:{
     ...mapState({
@@ -129,9 +161,25 @@ export default {
     }
     this.flightId = this.$route.query.flightId;
     this.loadInfo();
+    this.loadTravel()
   },
   methods:{
     moment,
+    async loadTravel(){
+      let [err,response] = await handle(api_user.travels());
+      let {ok,msg,res,type} = business.checkResponseRcode(response,err);
+      if(!ok){
+        return this.$message[type](msg)
+      }
+      this.travels = res.data;
+      if(this.travels.length<1){return this.$message.error('请在个人中心,先添加乘车人!!!')}
+      this.travelOptions = res.data.map(val=>{
+        return {
+          value: val.id,
+          text: val.name
+        }
+      })
+    },
     async loadInfo(){
       if(!this.flightId){
         return this.$message.error('请输入航班id');
@@ -160,6 +208,30 @@ export default {
       this.flightTime = `${day?day+'天-':''}${h}小时-${m}分-${s}秒`
 
     },
+    handleTravelChange(selectedItems){
+      console.log(selectedItems);
+      this.selectedTravels = selectedItems;
+      this.price = Number(this.flightData.currentPrice) * this.selectedTravels.length;
+    },
+    showTravelPop(){
+      this.editTravelShow=true;
+      this.editTravelLoading = false;
+    },
+    cancelTravelHandle(){
+      this.editTravelLoading = false;
+      this.editTravelShow= false;
+    },
+    async okTravelHandle(){
+      this.editTravelLoading = true;
+      await this.loadTravel();
+      this.cancelTravelHandle();
+    },
+    // 创建订单
+    async createOrder(){
+      let travels = this.selectedTravels;
+      if(travels.length < 1){return this.$message.error('请选择乘机人')}
+
+    }
   }
 }
 </script>
