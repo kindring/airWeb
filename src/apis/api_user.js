@@ -147,6 +147,18 @@ function travelInfo(passwd,travelId,url = '/user/api/travel/info'){
     });
 }
 
+function addOrder(flightId,travelIds,url = '/user/api/order/add'){
+    return axios.post(url,{
+        travelIds:travelIds,
+        flightId:flightId,
+    });
+}
+
+function orders(orderType,url = '/user/api/orders'){
+    url+=`?type=${orderType}`
+    return axios.get(url);
+}
+
 export default {
     adminLogin,
     checkAccount,
@@ -160,7 +172,9 @@ export default {
     travels,
     addTravel,
     changeTravel,
-    travelInfo
+    travelInfo,
+    addOrder,
+    orders
 }
 
 

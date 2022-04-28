@@ -125,7 +125,7 @@ import api_user from "@/apis/api_user";
 import pop from '@/components/public/pop'
 import AddTravel from "@components/index/components/addTravel";
 import Loading from "@components/public/loading";
-
+import fields from "@/mapField/field"
 export default {
   name: "buy",
   components: {Loading, AddTravel,pop},
@@ -230,7 +230,19 @@ export default {
     async createOrder(){
       let travels = this.selectedTravels;
       if(travels.length < 1){return this.$message.error('请选择乘机人')}
-
+      if(this.flightData.flightState != fields.flightState_sail){
+        return this.$message.error('该航班不在售卖状态');
+      }
+      let [err,response] = await handle(api_user.addOrder(this.flightId,travels))
+      let {ok,msg,res} = business.checkResponseRcode(response,err);
+      if(!ok){
+        this.$message.error('订单创建失败')
+        return this.$message.warn(msg);
+      }
+      console.log(res.data);
+      // 订单创建成功
+      this.$message.success('订单创建成功');
+      this.$router.push(`/order?orderId=${res.data.id}`);
     }
   }
 }
