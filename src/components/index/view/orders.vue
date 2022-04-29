@@ -56,7 +56,7 @@
             </div>
             <!-- 订单状态 -->
             <div class="w-1/5 flex justify-center">
-              <pay-states :pay-state="item.payState"></pay-states>
+              <pay-states :pay-state="item.payState" :create-time="item.createTime"></pay-states>
             </div>
             <div class="w-1/5 flex justify-center">
               <div class="px-1.5 flex items-center ml-3 ">
@@ -64,7 +64,7 @@
                   <air-link :type="2" :path="`/#/order?orderId=${item.id}`">订单详情</air-link>
                 </a-button>
 
-                <a-button v-if="item.payState === '1'" type="primary" @click="payOrder(item.id)">
+                <a-button v-if="item.payState === '1'" type="primary" @click="payOrder(item)">
                   立即支付
                 </a-button>
                 <a-button v-else-if="item.payState === '8' || item.payState === '6'|| item.payState === '5' "
@@ -91,7 +91,7 @@
       </div>
     </div>
     <pop  :show="editPopShow" :loading="editLoading">
-      <pay-order :order-id="orderId" @ok="okHandle" @cancel="cancelHandle"></pay-order>
+      <pay-order :buy-num="travelNum" :flight-price="currentPrice" :order-id="orderId" @ok="okHandle" @cancel="cancelHandle"></pay-order>
     </pop>
   </layout_user>
 </template>
@@ -126,8 +126,11 @@ export default {
       page: 0,
       pageSize: 10,
       orderId: null,
+      travelNum: null,
+      currentPrice: null,
       editPopShow:false,
       editLoading: false,
+      timeS: {}
     }
   },
   computed:{
@@ -163,14 +166,6 @@ export default {
       this.orders = res.data;
       this.page = 1;
     },
-    async removeCar(id){
-      let [err,response] = await handle(api_user.removeCar(id));
-      let recodeMeta = business.checkResponseRcode(response,err);
-      if(!recodeMeta.ok){
-        return this.$message.error(recodeMeta.msg);
-      }
-      console.log('移除成功')
-    },
     // 切换订单类型
     async onChangeOrderType(){
       await this.loadOrders();
@@ -179,8 +174,11 @@ export default {
       console.log(this.page)
     },
     // 输入密码
-    payOrder(orderId){
-      this.orderId = orderId;
+    payOrder(order){
+      console.log(order);
+      this.orderId = order.id;
+      this.currentPrice = parseFloat(order.currentPrice);
+      this.travelNum = order.ticketNum;
       this.showPop()
     },
     showPop(){
@@ -191,6 +189,8 @@ export default {
       this.editLoading = false;
       this.editPopShow= false;
       this.orderId = null;
+      this.currentPrice = null;
+      this.travelNum = null;
     },
     // 订单支付成功
     async okHandle(){

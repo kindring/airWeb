@@ -30,6 +30,15 @@ function dateFormat(date, format = 'YY-MM-DD H:m:s') {
 }
 
 /**
+ * 获取unix时间戳
+ * @param [date] 时间对象
+ * @returns {number}
+ */
+export function getUnixTimeStamp(date = new Date()){
+    return parseInt(date.getTime() / 1000);
+}
+
+/**
  * 时间戳字符转时间对象
  * @param timeStamp 时间戳
  * @param s 差距
@@ -42,5 +51,6 @@ function timeStamp_to_Date(timeStamp,s = 1000){
 
 export default {
     dateFormat,
+    getUnixTimeStamp,
     timeStamp_to_Date
 }

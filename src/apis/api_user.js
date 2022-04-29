@@ -166,6 +166,12 @@ function payOrder(orderId,passwd,url='/user/api/order/pay'){
     });
 }
 
+
+function orderInfo(orderId,url=`/user/api/order/info`){
+    url+=`?orderId=${orderId}`
+    return axios.get(url);
+}
+
 export default {
     adminLogin,
     checkAccount,
@@ -182,7 +188,8 @@ export default {
     travelInfo,
     addOrder,
     orders,
-    payOrder
+    payOrder,
+    orderInfo
 }
 
 

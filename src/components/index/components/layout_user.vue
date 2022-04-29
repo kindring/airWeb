@@ -40,8 +40,7 @@ export default {
           business.toLogin('/login');
         },500)
       }
-    },2300)
-
+    },1300)
   },
   methods: {
 

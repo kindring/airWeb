@@ -8,8 +8,17 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
     >
+      <div class="px-1 py-2 text-2xl">
+        请确认是否支付订单
+      </div>
       <div class="px-1 py-2">
-        确认是否支付订单,支付订单后需要选坐才能视作成功出行
+        乘客数量: <span class="px-2">{{buyNum}}</span>
+      </div>
+      <div class="px-1 py-2">
+        机票单价: <span class="px-2 text-red-400">{{flightPrice}}</span>
+      </div>
+      <div class="px-1 py-2">
+        订单总价: <span class="px-2 text-red-500">{{buyNum*flightPrice}}</span>
       </div>
       <!--           登陆密码-->
       <a-form-model-item
@@ -55,7 +64,9 @@ import business from "@/utils/business";
 export default {
   name: "payOrder",
   props:{
-    orderId:{}
+    orderId:{required:true},
+    flightPrice:{required:true},
+    buyNum:{default:1}
   },
   data(){
     return {
