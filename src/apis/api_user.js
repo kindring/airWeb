@@ -159,6 +159,13 @@ function orders(orderType,url = '/user/api/orders'){
     return axios.get(url);
 }
 
+function payOrder(orderId,passwd,url='/user/api/order/pay'){
+    return axios.post(url,{
+        orderId: orderId,
+        passwd:passwd,
+    });
+}
+
 export default {
     adminLogin,
     checkAccount,
@@ -174,7 +181,8 @@ export default {
     changeTravel,
     travelInfo,
     addOrder,
-    orders
+    orders,
+    payOrder
 }
 
 
