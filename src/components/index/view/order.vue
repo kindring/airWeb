@@ -104,8 +104,11 @@
           <div class="flex items-center py-2 px-2 bg-blue-300 border-t border-pink-300">
 
             <a-button @click="showPop" v-if="orderData.payState == field.payState_create">支付订单</a-button>
-            <a-button
-                      v-if="orderData.payState == field.payState_pay || orderData.payState == field.payState_rebates ">立即选坐</a-button>
+            <div class="flex"  v-if="orderData.payState == field.payState_pay || orderData.payState == field.payState_rebates ">
+              <a-button type="primary">立即选坐</a-button>
+              <a-button class="ml-2" type="danger">退票</a-button>
+            </div>
+
           </div>
         </div>
       </div>
@@ -125,6 +128,7 @@
     <pop  :show="editPopShow" :loading="editLoading">
       <pay-order :buy-num="travelNum" :flight-price="currentPrice" :order-id="orderId" @ok="okHandle" @cancel="cancelHandle"></pay-order>
     </pop>
+
   </layout_user>
 </template>
 

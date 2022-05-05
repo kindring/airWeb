@@ -70,6 +70,11 @@ function airs(state,url = '/api/flight/airs'){
     return axios.get(url);
 }
 
+function seatInfo(flightId,url = '/api/flight/airs'){
+    url+=`?flightId=${flightId}`
+    return axios.get(url);
+}
+
 function changeAir(airId,params,url = '/api/flight/air/change'){
     return axios.post(url,{
         airId:airId,
@@ -89,6 +94,7 @@ export default {
     news,
     addAir,
     airs,
+    seatInfo,
     changeAir
 }
 
