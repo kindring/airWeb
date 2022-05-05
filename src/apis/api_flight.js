@@ -70,7 +70,7 @@ function airs(state,url = '/api/flight/airs'){
     return axios.get(url);
 }
 
-function seatInfo(flightId,url = '/api/flight/airs'){
+function seatInfo(flightId,url = '/api/flight/seat'){
     url+=`?flightId=${flightId}`
     return axios.get(url);
 }

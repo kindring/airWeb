@@ -105,7 +105,7 @@
 
             <a-button @click="showPop" v-if="orderData.payState == field.payState_create">支付订单</a-button>
             <div class="flex"  v-if="orderData.payState == field.payState_pay || orderData.payState == field.payState_rebates ">
-              <a-button type="primary">立即选坐</a-button>
+              <a-button type="primary" @click="showChoosePop">立即选坐</a-button>
               <a-button class="ml-2" type="danger">退票</a-button>
             </div>
 
@@ -128,7 +128,9 @@
     <pop  :show="editPopShow" :loading="editLoading">
       <pay-order :buy-num="travelNum" :flight-price="currentPrice" :order-id="orderId" @ok="okHandle" @cancel="cancelHandle"></pay-order>
     </pop>
-
+    <pop  :show="chooseSitShow" :loading="chooseSitLoading">
+      <choose-to-sit :flight-id="orderData.flightId" :ticks="orderData.ticks" @cancel="cancelChoosePop"></choose-to-sit>
+    </pop>
   </layout_user>
 </template>
 
@@ -147,9 +149,10 @@ import PayStates from "@components/index/components/payStates";
 import code from "@/mapField/rcodeMap";
 import field from "@/mapField/field";
 import TickState from "@components/index/components/tickState";
+import ChooseToSit from "@components/index/components/chooseToSit";
 export default {
   name: "order",
-  components: {TickState, PayStates, PayOrder, Pop, airLink, Loading, layout_user},
+  components: {ChooseToSit, TickState, PayStates, PayOrder, Pop, airLink, Loading, layout_user},
   data(){
     return {
       field,
@@ -159,8 +162,11 @@ export default {
       orderData:{},
       editPopShow:false,
       editLoading: false,
+      chooseSitShow:false,
+      chooseSitLoading: false,
       travelNum:null,
-      currentPrice:null
+      currentPrice:null,
+      ticks: []
     }
   },
   mounted(){
@@ -194,6 +200,14 @@ export default {
     showPop(){
       this.editPopShow=true;
       this.editLoading = false;
+    },
+    showChoosePop(){
+      this.chooseSitShow=true;
+      this.chooseSitLoading = false;
+    },
+    cancelChoosePop(){
+      this.chooseSitLoading = false;
+      this.chooseSitShow= false;
     },
     cancelHandle(){
       this.editLoading = false;
