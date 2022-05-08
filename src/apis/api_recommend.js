@@ -64,7 +64,12 @@ function changeRecommendFlight(recommendId,flightId,recommendIndex,url='/api/rec
     return axios.post(url,{recommendId:recommendId,flightId:flightId,recommendIndex:recommendIndex})
 }
 
+function homer(url='/api/recommend/homer'){
+    return axios.get(url);
+}
+
 export default {
+    homer,
     getRecommends,
     loadRecommend,
     addRecommend,

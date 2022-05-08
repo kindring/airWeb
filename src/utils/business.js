@@ -34,12 +34,12 @@ function checkResponseRcode(response,err,fns={}){
     let defaultFns = {
         [code.notLogin]:toLogin,
     }
-    console.log(fns)
+    // console.log(fns)
     let fnHandle={
         ...defaultFns,
         ...fns
     }
-    console.log(fnHandle)
+    // console.log(fnHandle)
     let res = {
         //请求是否成功
         ok: false,

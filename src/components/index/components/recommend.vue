@@ -9,14 +9,15 @@
            :key="recommend.href"
       >
         <div class="recommend-title">
-          <img :src="recommend.bgImg" :alt="recommend.title">
-         <span>{{recommend.title}}</span>
+          <img :src="recommend.bg" :alt="recommend.recommendName">
+         <span>{{recommend.recommendName}}</span>
         </div>
 <!--        列表-->
         <div class="recommend-list">
-          <div class="recommend-item"
-               v-for="(item,i) in recommend.child"
-              :key="item.id"
+          <router-link class="recommend-item"
+               v-for="(item,i) in recommend.flights"
+              :key="'recommend-f-'+item.flightId+'-r-'+item.recommendId"
+              :to="`/info?flightId=${item.flightId}`"
           >
 <!--            排序-->
             <div class="rank">
@@ -24,21 +25,20 @@
             </div>
 <!--            图片-->
             <div class="img">
-              <img :src="item.img" :alt="item.startAddr+item.targetAddr">
+              <img :src="item.img" :alt="item.departureCityName+'-'+item.targetCityName">
             </div>
 <!--            详细信息-->
             <div class="info">
 <!--              航班信息-->
               <div class="info1 text-xl">
-                <span class="city-name"><span>{{item.startAddr}}</span>-<span>{{item.targetAddr}}</span></span>
-                <span class="price">￥{{item.price}}起</span>
+                <span class="city-name"><span>{{item.departureCityName}}</span>-<span>{{item.targetCityName}}</span></span>
+                <span class="price">￥{{item.currentPrice}}起</span>
               </div>
               <div class="info2 mt">
-                <span class="se-time"><span>{{item.startTime}}</span>去<span>{{item.endTime}}</span>回</span>
-                <span>{{item.discount}}折</span>
+                <span class="se-time"><span>{{moment((item.sailingTime-0)*1000).format('YY-MM-DD')}}</span>去<span>{{moment((item.langdinTime-0)*1000).format('YY-MM-DD')}}</span>回</span>
               </div>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </div>
@@ -46,20 +46,25 @@
 </template>
 
 <script>
+import moment from "moment";
+import api_recommend from "@/apis/api_recommend";
+import handle from "@/utils/handle";
+import api_city from "@/apis/api_city";
+import business from "@/utils/business";
 export default {
   name: "recommend",
   data(){
     return {
+      img: process.env.BASE_URL+'image/addr/丽江.jpg',
       recommends:[
           {
               title:'周末省心游',
               href: 'weekend',
-              bgImg: process.env.BASE_URL+'image/weekend.jpg',
+
               child: [
                 {
                   startAddr: '深圳',
                   targetAddr: '杭州',
-                  img: process.env.BASE_URL+'image/addr/丽江.jpg',
                   startTime: '3-04',
                   endTime: '3-08',
                   price:154,
@@ -223,6 +228,24 @@ export default {
           ]
         },
       ]
+    }
+  },
+  async mounted(){
+    await this.loadHomeRecommends();
+  },
+  methods:{
+    moment,
+    // 加载首页航班
+    async loadHomeRecommends(){
+      let [err,response] = await handle(api_recommend.homer());
+      // console.log(response);
+      let {ok,msg,res} = business.checkResponseRcode(response,err);
+      if(!ok){this.$message.error(msg)}
+      console.log(res);
+      if(res.data.length){
+        res.data = res.data.splice(0,3);
+      }
+      this.recommends = res.data;
     }
   }
 }

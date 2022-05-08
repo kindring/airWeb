@@ -107,18 +107,18 @@ export default {
       this.form.zIndex = 1;
     },
     async submitHandle(e) {
-      let cityName = this.form.cityName;
-      let cityType = this.form.cityType;
-      // console.log(cityName,cityType);
-      let [err,response] = await handle(api_city.addCity(cityType,cityName));
+      let recommendName = this.form.recommendName;
+      let discript = this.form.discript;
+      let zIndex = this.form.zIndex;
+      let [err,response] = await handle(api_city.addRecommend(recommendName,discript,zIndex));
       console.log(response);
       let rcodeMean = business.checkResponseRcode(response,err);
       if(rcodeMean.ok){
         // 登陆成功
-        this.$message.success(`添加城市成功`);
+        this.$message.success(`添加活动成功`);
         this.countDown();
       }else{
-        this.$message.error('添加城市失败')
+        this.$message.error('添加活动失败')
         this.$message[rcodeMean.type](rcodeMean.msg);
       }
     },
@@ -134,7 +134,7 @@ export default {
           that.resetForm();
         },
         onOk() {
-          that.$router.push('/citys');
+          that.$router.push('/recommends');
         },
       });
     },
