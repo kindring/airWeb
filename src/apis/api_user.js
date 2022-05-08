@@ -172,6 +172,29 @@ function orderInfo(orderId,url=`/user/api/order/info`){
     return axios.get(url);
 }
 
+/**
+ * 选择座位
+ * @param seatId
+ * @param row
+ * @param col
+ * @param url
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+function chooseSeat(seatId,row,col , url = '/user/api/seat/choose'){
+    return axios.post(url,{
+        seatId,
+        row,
+        col
+    })
+}
+
+function refundOrder(orderId, url = '/user/api/order/refund'){
+    return axios.post(url,{orderId:orderId})
+}
+function refundTick(tickId, url = '/user/api/seat/refund'){
+    return axios.post(url,{tickId:tickId})
+}
+
 export default {
     adminLogin,
     checkAccount,
@@ -189,7 +212,10 @@ export default {
     addOrder,
     orders,
     payOrder,
-    orderInfo
+    orderInfo,
+    chooseSeat,
+    refundOrder,
+    refundTick
 }
 
 

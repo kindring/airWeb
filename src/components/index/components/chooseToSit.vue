@@ -4,10 +4,12 @@
     <div class="mt-2  w-full h-5/6 flex flex-col">
       <div class="w-full h-12 flex flex-shrink ">
         <div class="w-1/2">
-          选择乘机人:<table-select class="ml-2"  :options="tickOptions" v-model="tickValue"></table-select>
+          选择乘机人:<table-select class="ml-2"  :options="tickOptions" v-model="tickValue" @change="tickChange"></table-select>
         </div>
         <div class="w-1/2 border-l px-2 flex items-center">
-          {{selectedRow}}排-{{selectedCol}}座
+          <span v-if="tickData.tickState == field.tickState_seat || tickData.tickState == field.tickState_seat">{{tickRow}}排-{{tickCol}}座</span>
+          <span v-else-if="tickData.tickState == field.tickState_refund" class="text-red-500">已经退款</span>
+          <span v-else>待选中座位</span>
         </div>
       </div>
       <div class="w-full h-5/6 overflow-auto">
@@ -65,7 +67,7 @@
         <a-button-group>
           <a-button @click="hideEditPop">关闭选坐界面</a-button>
           <a-button @click="okSeat" v-if="selectedRow&&selectedCol " :disabled="tickData.tickState!=field.tickState_create"
-                    type="primary">确定选座</a-button>
+                    type="primary">选择{{selectedRow}}排{{selectedCol}}座</a-button>
         </a-button-group>
       </div>
       <!--      选择乘客-->
@@ -90,7 +92,8 @@ export default {
     ticks: {
       required:true,
       default(){return []}
-    }
+    },
+    defaultTick:null,
   },
   data(){
     return {
@@ -101,6 +104,8 @@ export default {
       row: 0,
       // 座位信息
       col: 0,
+      tickRow:null,
+      tickCol:null,
       // 已经被选择的座位
       selecteds: [],
       // 机票
@@ -125,17 +130,29 @@ export default {
     // 转换机票信息
     transformTick(){
       this.tickOptions = [];
+      let tmpDefaultTick;
       this.ticks.forEach(val=>{
-        this.tickOptions.push({
+        let item = {
           ...val,
           value: val.id,
           text: val.name,
-        })
+        }
+        if(this.defaultTick&&this.defaultTick==val.id){
+          tmpDefaultTick=item;
+        }
+        this.tickOptions.push(item)
       });
-      if(this.tickOptions[0]){
+
+      console.log(tmpDefaultTick)
+      if(tmpDefaultTick){
+        this.tickValue = tmpDefaultTick.value
+        this.tickData = tmpDefaultTick
+      }else if(this.tickOptions[0]){
         this.tickValue = this.tickOptions[0].value
         this.tickData = this.tickOptions[0]
       }
+      this.tickRow = this.tickData.row;
+      this.tickCol = this.tickData.tickCol;
     },
     // 获取机票信息
     async loadSeatInfo(){
@@ -179,12 +196,31 @@ export default {
       this.selectedRow = row;
       this.selectedCol = col;
     },
+    tickChange(tickId){
+      console.log(`c-------------------`);
+      console.log(...arguments);
+      // 找到对应的值
+      let v = this.tickOptions.find(val=>val.id==tickId);
+      if(v){
+        this.tickData = v;
+        this.tickRow = this.tickData.row;
+        this.tickCol = this.tickData.col;
+      }
+    },
     // 乘客选中座位
-    okSeat(){
+    async okSeat(){
       console.log(`行${this.selectedRow}`)
       console.log(`列${this.selectedCol}`)
       console.log(this.tickData);
     //  选中位置,发送请求
+      let [err,response] = await handle(api_user.chooseSeat(this.tickData.id,this.selectedRow,this.selectedCol));
+      let {ok,msg,res} = business.checkResponseRcode(response,err);
+      if(!ok){this.$message.error(msg)}
+      this.tickData.row = this.selectedRow;
+      this.tickData.col = this.selectedCol;
+      // 选座完成
+      await this.loadSeatInfo();
+      this.$emit('ok');
     }
   }
 }

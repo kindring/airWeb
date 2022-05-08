@@ -75,6 +75,7 @@ function seatInfo(flightId,url = '/api/flight/seat'){
     return axios.get(url);
 }
 
+
 function changeAir(airId,params,url = '/api/flight/air/change'){
     return axios.post(url,{
         airId:airId,
@@ -95,7 +96,7 @@ export default {
     addAir,
     airs,
     seatInfo,
-    changeAir
+    changeAir,
 }
 
 

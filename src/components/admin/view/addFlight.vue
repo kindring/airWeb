@@ -393,7 +393,7 @@ export default {
       })
     },
     // 加载航班具体数据
-    async airId(){
+    async loadFlight(){
       if(!this.flightId){
         return this.$message.info('没有id拒绝获取机票信息')
       }

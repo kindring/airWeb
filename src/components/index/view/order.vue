@@ -15,7 +15,21 @@
             订单状态
             <pay-states :pay-state="orderData.payState" :create-time="orderData.createTime"></pay-states>
           </div>
-
+          <div class="flex items-center py-2 px-4">
+            航班状态
+            <div v-if="orderData.flightState === '1'" class="px-2.5 flex items-center ml-3 bg-green-200 py-1" >
+              正在售票中
+            </div>
+            <div v-else-if="orderData.flightState === '2'" class="px-2.5 flex items-center ml-3 bg-blue-300 py-1" >
+              正在检票中
+            </div>
+            <div v-else-if="orderData.flightState === '3'" class="px-2.5 flex items-center ml-3 bg-yellow-200 py-1" >
+              飞行中
+            </div>
+            <div v-else class="px-2.5 flex items-center ml-3 bg-gray-400 py-1" >
+              航班已经结束
+            </div>
+          </div>
           <div class="flex items-center py-2 px-4">
             出发城市:<span class="ml-3">{{ orderData.departureCityName }}</span>
           </div>
@@ -38,7 +52,7 @@
           <div class="flex py-2 px-4 ">
             乘客信息:
 <!--            等待支付状态 -->
-            <div class="ml-2 flex flex-col border border-blue-300" v-if="orderData.payState == field.payState_create||orderData.ticks">
+            <div class="ml-2 flex flex-col border border-blue-300" v-if="orderData.payState == field.payState_create||!orderData.ticks">
               <div class="flex py-2 px-2 w-48 border-b border-white cursor-default"
                    v-for="travel in orderData.travels"
                    :key="'travel'+travel.id"
@@ -46,8 +60,8 @@
             </div>
 <!--            已经退款的状态 -->
 
-<!--            其他状态 -->
-            <div class="ml-2 flex w-5/12 p-2  flex-col border border-blue-100 bg-white" v-else>
+<!--            其他乘客状态 -->
+            <div class="ml-2 flex w-6/12 p-2  flex-col border border-blue-100 bg-white" v-else>
               <div
                    v-for="tick in orderData.ticks"
                    :key="'travel'+tick.id"
@@ -61,6 +75,7 @@
 <!--              座位信息 -->
                 <div class="border-l px-3">
                   <div class="px-1" v-if="tick.tickState == field.tickState_create">等待选择座位,值机</div>
+                  <div class="px-1" v-else-if="tick.tickState == field.tickState_refund">机票已经退款</div>
                   <div class="px-1" v-else>
 <!--                    已经值机,或者是-->
                     <span class="mx-1">{{ tick.row }}</span>
@@ -74,8 +89,8 @@
                   <tick-state :tick-state="tick.tickState"></tick-state>
                 </div>
                 <div class="border-l px-3 ">
-                  <a-button class="mx-2" type="primary" :disabled="tick.tickState != field.tickState_create">立即选坐</a-button>
-                  <a-button class="mx-2" type="danger" :disabled="tick.tickState != field.tickState_create">退票</a-button>
+                  <a-button class="mx-2" type="primary" :disabled="tick.tickState != field.tickState_create" @click="tickChooseSeat(tick.id)">立即选坐</a-button>
+                  <a-button class="mx-2" type="danger" :disabled="tick.tickState != field.tickState_create" @click="refundTick(tick.id)">退票</a-button>
                 </div>
               </div>
             </div>
@@ -106,7 +121,7 @@
             <a-button @click="showPop" v-if="orderData.payState == field.payState_create">支付订单</a-button>
             <div class="flex"  v-if="orderData.payState == field.payState_pay || orderData.payState == field.payState_rebates ">
               <a-button type="primary" @click="showChoosePop">立即选坐</a-button>
-              <a-button class="ml-2" type="danger">退票</a-button>
+              <a-button class="ml-2" type="danger" @click="refundOrder">退票</a-button>
             </div>
 
           </div>
@@ -129,7 +144,7 @@
       <pay-order :buy-num="travelNum" :flight-price="currentPrice" :order-id="orderId" @ok="okHandle" @cancel="cancelHandle"></pay-order>
     </pop>
     <pop  :show="chooseSitShow" :loading="chooseSitLoading">
-      <choose-to-sit :flight-id="orderData.flightId" :ticks="orderData.ticks" @cancel="cancelChoosePop"></choose-to-sit>
+      <choose-to-sit :flight-id="orderData.flightId" :default-tick="chooseTravelId" :ticks="orderData.ticks" @ok="okSeatHandle" @cancel="cancelChoosePop"></choose-to-sit>
     </pop>
   </layout_user>
 </template>
@@ -166,6 +181,7 @@ export default {
       chooseSitLoading: false,
       travelNum:null,
       currentPrice:null,
+      chooseTravelId: null,
       ticks: []
     }
   },
@@ -193,6 +209,18 @@ export default {
       this.travelNum = parseInt(res.data.ticketNum)
       this.currentPrice = parseFloat(res.data.currentPrice)
     },
+    tickChooseSeat(tickId){
+      if(!tickId){return tickId}
+      console.log(tickId)
+      console.log(tickId)
+      console.log(tickId)
+
+      console.log(tickId)
+      console.log(tickId)
+      console.log(tickId)
+      this.chooseTravelId = tickId;
+      this.showChoosePop();
+    },
     // 输入密码
     payOrder(){
       this.showPop()
@@ -212,14 +240,45 @@ export default {
     cancelHandle(){
       this.editLoading = false;
       this.editPopShow= false;
+      this.chooseTravelId = null;
       // this.orderId = null;
     },
     // 订单支付成功
     async okHandle(){
       this.editLoading = true;
-      // await this.loadOrders();
+      await this.loadOrderInfo();
       this.cancelHandle();
     },
+    // 乘客选座成功
+    okSeatHandle(){
+      this.cancelHandle();
+      this.okHandle();
+    },
+    // 退款订单
+    async refundOrder(){
+      let [err,response] = await handle(api_user.refundOrder(this.orderId));
+      let {ok,msg,res} = business.checkResponseRcode(response,err,{[code.notLogin]:console.log});
+      if(!ok){
+        this.$message.error('退款订单失败');
+        return this.$message.error(msg);
+      }
+      this.$message.success('退款订单成功');
+      this.showPop();
+      this.okHandle();
+    },
+    // 退票
+    async refundTick(tickId){
+      if(!tickId){return this.$message.warn('请输入tickId')}
+      let [err,response] = await handle(api_user.refundTick(tickId));
+      let {ok,msg,res} = business.checkResponseRcode(response,err,{[code.notLogin]:console.log});
+      if(!ok){
+        this.$message.error('退票失败');
+        return this.$message.error(msg);
+      }
+      this.$message.success('退票成功');
+      this.showPop();
+      this.okHandle();
+    }
   }
 }
 </script>

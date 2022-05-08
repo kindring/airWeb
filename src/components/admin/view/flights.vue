@@ -54,7 +54,9 @@
         <a-button class="py-1 px-2 rounded bg-green-200" @click="nextState" v-if="flightState==='1'">切换为检票状态</a-button>
         <a-button class="py-1 px-2 rounded bg-yellow-600" @click="nextState" v-else-if="flightState==='2'">切换为飞行状态</a-button>
         <a-button class="py-1 px-2 rounded bg-blue-200" @click="nextState" v-else-if="flightState==='3'">切换到已经到站</a-button>
-        <a-button class="py-1 px-2 rounded bg-gray-200" @click="popHide" v-else-if="flightState==='4'">关闭</a-button>
+        <div class="border-t pt-2 mt-4">
+          <a-button class="mx-2" type="danger" @click="popHide">关闭窗口</a-button>
+        </div>
       </a-card>
     </pop>
   </div>
