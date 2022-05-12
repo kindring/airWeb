@@ -49,7 +49,7 @@ export default {
   async mounted(){
     let recodeMeta =await this.loadUser();
     if(!recodeMeta.ok){
-      return this.$message.warn(recodeMeta.msg);
+      // return this.$message.warn(recodeMeta.msg);
     }
     // 加载用户状态整个
   },

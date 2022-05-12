@@ -25,10 +25,11 @@ function loadRecommend(recommendId,url = `/api/recommend`){
  * @param recommendName
  * @param descript
  * @param zIndex
+ * @param imgUrl
  * @param url
  */
-function addRecommend(recommendName,descript,zIndex,url = '/api/recommend/add'){
-    return axios.post(url,{recommendName:recommendName,descript:descript,zIndex:zIndex});
+function addRecommend(recommendName,descript,zIndex,imgUrl,url = '/api/recommend/add'){
+    return axios.post(url,{recommendName:recommendName,descript:descript,zIndex:zIndex,imgUrl:imgUrl});
 }
 
 /**

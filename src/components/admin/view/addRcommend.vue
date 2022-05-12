@@ -48,6 +48,19 @@
           <a-input-number :min="0" :max="15" :step="1" v-model="form.zIndex" />
         </a-form-model-item>
 
+<!--        推荐图片-->
+        <a-row class="mt-3">
+          <a-col :span="labelCol.span" class="text-right">
+            推荐图片:
+          </a-col>
+          <a-col class="flex">
+            <div class="recommend flex justify-center items-center bg-gray-300">
+              <img class="w-full h-full" v-show="form.imgUrl" :src="form.imgUrl" :alt="form.imgUrl">
+            </div>
+            <a-button class="ml-2" @click="showImgSelect">选择图片</a-button>
+          </a-col>
+        </a-row>
+
         <!--             提交按钮            -->
         <a-row class="mt-10">
           <a-col :span="labelCol.span">
@@ -63,6 +76,9 @@
 
       </a-form-model>
     </table-layout>
+    <pop :show="imgShow" :loading="imgLoading">
+      <image-table @ok="okHandle" @cancel="hideImgPop"></image-table>
+    </pop>
   </div>
 </template>
 
@@ -74,9 +90,11 @@ import handle from "@/utils/handle";
 import userApi from "@/apis/api_user";
 import business from "@/utils/business";
 import api_city from "@/apis/api_city";
+import Pop from "@components/public/pop";
+import ImageTable from "@components/admin/components/imageTable";
 export default {
   name: "addRecommend",
-  components: { tableLayout, RoundTitle},
+  components: {ImageTable, Pop, tableLayout, RoundTitle},
   data(){
     return {
       labelCol: { span: 4 },
@@ -85,6 +103,7 @@ export default {
         recommendName: '',
         discript: '',
         zIndex: 1,
+        imgUrl: ''
       },
       rules: {
         recommendName: [
@@ -96,7 +115,9 @@ export default {
         zIndex: [
           {required:'true',message:'排序'}
         ],
-      }
+      },
+      imgShow: false,
+      imgLoading: false,
     }
   },
   methods:{
@@ -105,12 +126,14 @@ export default {
       this.form.recommendName = '';
       this.form.discript = '';
       this.form.zIndex = 1;
+      this.form.imgUrl = '';
     },
     async submitHandle(e) {
       let recommendName = this.form.recommendName;
       let discript = this.form.discript;
       let zIndex = this.form.zIndex;
-      let [err,response] = await handle(api_city.addRecommend(recommendName,discript,zIndex));
+      let imgUrl = this.form.imgUrl;
+      let [err,response] = await handle(api_city.addRecommend(recommendName,discript,zIndex,imgUrl));
       console.log(response);
       let rcodeMean = business.checkResponseRcode(response,err);
       if(rcodeMean.ok){
@@ -138,10 +161,26 @@ export default {
         },
       });
     },
+    hideImgPop(){
+      this.imgShow = false;
+      this.imgLoading = false;
+    },
+    okHandle(imgUrl){
+      this.form.imgUrl = imgUrl;
+      this.hideImgPop();
+    },
+    showImgSelect(){
+      this.imgShow = true;
+      this.imgLoading = false;
+    },
+
   }
 }
 </script>
 
 <style scoped>
-
+.recommend {
+  width: 382px;
+  height: 68px;
+}
 </style>
