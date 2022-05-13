@@ -5,7 +5,7 @@ import  axios from './axios';
  * @param url
  * @returns {*|Promise<AxiosResponse<any>>}
  */
-function getRecommends(url = `/api/recommend/list`){
+function getRecommends(url = `/api/recommend/recommends`){
     return axios.get(url);
 }
 

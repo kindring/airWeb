@@ -1,8 +1,8 @@
 <template>
   <div class="w-full">
-    <round-title>新增推荐</round-title>
+    <round-title>推荐详情</round-title>
     <table-layout >
-      <template #header>请输入活动信息</template>
+      <template #header>活动信息</template>
       <a-form-model
           class="relative"
           ref="ruleForm"
@@ -48,7 +48,7 @@
           <a-input-number :min="0" :max="15" :step="1" v-model="form.zIndex" />
         </a-form-model-item>
 
-<!--        推荐图片-->
+        <!--        推荐图片-->
         <a-row class="mt-3">
           <a-col :span="labelCol.span" class="text-right">
             推荐图片:
@@ -75,6 +75,9 @@
         </a-row>
 
       </a-form-model>
+      <div class="mt-2 border">
+
+      </div>
     </table-layout>
     <pop :show="imgShow" :loading="imgLoading">
       <image-table @ok="okHandle" @cancel="hideImgPop"></image-table>
@@ -83,17 +86,15 @@
 </template>
 
 <script>
-import RoundTitle from "@components/public/roundTitle";
 import tableLayout from "@components/admin/components/tableLayout";
-import fields from '@/mapField/field'
+import RoundTitle from "@components/public/roundTitle";
 import handle from "@/utils/handle";
-import userApi from "@/apis/api_user";
+import api_recommend from "@/apis/api_recommend";
 import business from "@/utils/business";
-import api_city from "@/apis/api_city";
 import Pop from "@components/public/pop";
 import ImageTable from "@components/admin/components/imageTable";
 export default {
-  name: "addRecommend",
+  name: "recommend",
   components: {ImageTable, Pop, tableLayout, RoundTitle},
   data(){
     return {
@@ -120,6 +121,9 @@ export default {
       imgLoading: false,
     }
   },
+  mounted(){
+
+  },
   methods:{
     // 重置表单
     resetForm(){
@@ -133,12 +137,12 @@ export default {
       let discript = this.form.discript;
       let zIndex = this.form.zIndex;
       let imgUrl = this.form.imgUrl;
-      let [err,response] = await handle(api_city.addRecommend(recommendName,discript,zIndex,imgUrl));
+      let [err,response] = await handle(api_recommend.addRecommend(recommendName,discript,zIndex,imgUrl));
       console.log(response);
       let rcodeMean = business.checkResponseRcode(response,err);
       if(rcodeMean.ok){
         // 登陆成功
-        this.$message.success(`添加活动成功`);
+        this.$message.success(`编辑活动成功`);
         this.countDown();
       }else{
         this.$message.error('添加活动失败')
@@ -179,8 +183,5 @@ export default {
 </script>
 
 <style scoped>
-.recommend {
-  width: 382px;
-  height: 68px;
-}
+
 </style>

@@ -2,7 +2,8 @@
 import index from '../../components/admin/view/index'
 import citys from '../../components/admin/view/citys.vue';
 import addCity from "@components/admin/view/addCity";
-import addRecommend from "@components/admin/view/addRcommend.vue";
+import addRecommend from "@components/admin/view/addRecommend.vue";
+import recommends from "@components/admin/view/recommends.vue";
 import flights from '@components/admin/view/flights'
 import addFlight from '@components/admin/view/addFlight'
 import logout from '@/components/admin/view/logout'
@@ -68,6 +69,15 @@ const routers = [{
         name: '新增推荐',
         meta:{title:"新增推荐"},
         component: addRecommend,
+    },
+    {
+        id: '/recommends',
+        text: '推荐列表',
+        is_menu: true,
+        path: '/recommends',
+        name: '推荐列表',
+        meta:{title:"推荐列表"},
+        component: recommends,
     },
     {
         id: '/addAir',
