@@ -15,7 +15,7 @@ function getRecommends(url = `/api/recommend/recommends`){
  * @param url
  * @returns {*|Promise<AxiosResponse<any>>}
  */
-function loadRecommend(recommendId,url = `/api/recommend`){
+function recommendInfo(recommendId,url = `/api/recommend/info`){
     url += `?id=${recommendId}`;
     return axios.get(url);
 }
@@ -32,17 +32,18 @@ function addRecommend(recommendName,descript,zIndex,imgUrl,url = '/api/recommend
     return axios.post(url,{recommendName:recommendName,descript:descript,zIndex:zIndex,imgUrl:imgUrl});
 }
 
-/**
- * 航班绑定推荐
- * @param recommendId
- * @param flights
- * @param url
- * @returns {Promise<AxiosResponse<any>>}
- */
-function addRecommendFlight(recommendId,flights,url = '/api/recommend/flight'){
-    return axios.post(url,{recommendId:recommendId,flights:flights})
-}
 
+
+/**
+ * 修改绑定的推荐信息
+ * @param recommendId
+ * @param changeParams
+ * @param url
+ * @returns {*|Promise<AxiosResponse<any>>}
+ */
+function changeRecommend(recommendId,changeParams,url='/api/recommend/change'){
+    return axios.post(url,{id:recommendId,params:changeParams})
+}
 /**
  * 删除某个活动中的某个航班
  * @param recommendId
@@ -58,23 +59,55 @@ function deleteRecommendFlight(recommendId,flightId,url = '/api/recommend/flight
  * 修改航班的推荐
  * @param recommendId 推荐活动id
  * @param flightId 航班id
- * @param recommendIndex 新的推荐级别
+ * @param params 航班信息 图片和排序
  * @param url
  */
-function changeRecommendFlight(recommendId,flightId,recommendIndex,url='/api/recommend/flight/change'){
-    return axios.post(url,{recommendId:recommendId,flightId:flightId,recommendIndex:recommendIndex})
+function changeRecommendItem(recommendId,flightId,params,url='/api/recommend/flight/change'){
+    return axios.post(url,{recommendId:recommendId,flightId:flightId,params:params})
+}
+
+/**
+ * 新增航班活动项
+ * @param recommendId
+ * @param flightId
+ * @param img
+ * @param zIndex
+ * @param url
+ * @returns {*|Promise<AxiosResponse<any>>}
+ */
+function addRecommendItem(recommendId,flightId,img,zIndex,url = '/api/recommend/flight/add'){
+    return axios.post(url,{
+        recommendId:recommendId,
+        flightId:flightId,
+        zIndex:zIndex,
+        img:img,
+    })
 }
 
 function homer(url='/api/recommend/homer'){
     return axios.get(url);
 }
 
+/**
+ * 获取未加载的航班列表
+ * @param recommendId
+ * @param url
+ * @returns {Promise<AxiosResponse<any>>|*}
+ */
+function recommendNotSelected (recommendId,url='/api/recommend/nof'){
+    url+=`?id=${recommendId}`
+    return axios.get(url);
+}
 export default {
     homer,
     getRecommends,
-    loadRecommend,
+    recommendInfo,
     addRecommend,
-    addRecommendFlight
+    changeRecommend,
+    addRecommendItem,
+    deleteRecommendFlight,
+    recommendNotSelected,
+    changeRecommendItem
 }
 
 

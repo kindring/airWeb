@@ -166,8 +166,8 @@ export default {
         {
           id:3,
           text: '推荐机票',
-          path: '/#/recommend',
-          icon: 'recommend',
+          path: '/#/recommends',
+          icon: 'recommends',
           type: 2
         },
         {

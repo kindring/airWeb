@@ -57,7 +57,37 @@ export let recommendColumns = [
     },
 ]
 
+
+export let recommendItemColumns = [
+    {
+        title: '航班名',
+        dataIndex: 'flightName',
+        width: '15%',
+    },
+    {
+        title: '图片',
+        dataIndex: 'img',
+        scopedSlots: { customRender: 'img' },
+        width: '180px',
+    },
+    {
+        title: '起始城市',
+        scopedSlots: { customRender: 'city' },
+        width: '25%',
+    },
+    {
+        title: '排序',
+        dataIndex: 'zIndex',
+        width: '10%',
+    },
+    {
+        title: '操作',
+        width: '20%',
+        scopedSlots: { customRender: 'operation' },
+    },
+]
 export default {
     airColumns,
-    recommendColumns
+    recommendColumns,
+    recommendItemColumns
 }

@@ -4,6 +4,7 @@ import citys from '../../components/admin/view/citys.vue';
 import addCity from "@components/admin/view/addCity";
 import addRecommend from "@components/admin/view/addRecommend.vue";
 import recommends from "@components/admin/view/recommends.vue";
+import recommend from "@components/admin/view/recommend.vue";
 import flights from '@components/admin/view/flights'
 import addFlight from '@components/admin/view/addFlight'
 import logout from '@/components/admin/view/logout'
@@ -78,6 +79,15 @@ const routers = [{
         name: '推荐列表',
         meta:{title:"推荐列表"},
         component: recommends,
+    },
+    {
+        id: '/recommend',
+        text: '推荐详情',
+        is_menu: true,
+        path: '/recommend',
+        name: '推荐详情',
+        meta:{title:"推荐详情"},
+        component: recommend,
     },
     {
         id: '/addAir',

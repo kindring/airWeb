@@ -69,7 +69,7 @@
           <a-col>
             <a-button-group>
               <a-button @click="resetForm">重置</a-button>
-              <a-button type="primary" @click="submitHandle">增加活动</a-button>
+              <a-button type="primary" @click="submitHandle">修改活动</a-button>
             </a-button-group>
           </a-col>
         </a-row>
@@ -79,8 +79,46 @@
 
       </div>
     </table-layout>
+    <table-layout >
+      <template #header>
+        <div class="flex justify-between">航班情况<a-button @click="addItem">新增推荐项</a-button></div>
+        </template>
+      <a-table
+          :columns="recommendItemColumns"
+          :data-source="recommendData.flights"
+          :loading="loading"
+          rowKey="id"
+      >
+        <template class="flex justify-center" slot="img" slot-scope="text">
+          <div class="w-full flex py-1 justify-center bg-gray-300 " >
+            <img style="width:176px;height:132px;" :src="text" :alt="text">
+          </div>
+        </template>
+        <template class="flex justify-center" slot="city" slot-scope="text,record">
+          {{record.departureCityName}}-{{record.targetCityName}}
+        </template>
+        <template class="flex justify-center" slot="operation" slot-scope="text,record">
+          <a-button  type="primary" @click="editItem(record)">
+            编辑
+          </a-button>
+          <a-button class="ml-1.5" type="danger" @click="deleteItem(record.flightId)">
+            删除
+          </a-button>
+        </template>
+      </a-table>
+    </table-layout>
     <pop :show="imgShow" :loading="imgLoading">
       <image-table @ok="okHandle" @cancel="hideImgPop"></image-table>
+    </pop>
+    <pop :show="recommendItemShow" :loading="recommendItemLoading">
+      <recommend-item
+          :recommend-id="recommendId"
+          :flight-id="flightId"
+          :flight-data="flightData"
+          :img="img"
+          :z-index="zIndex"
+          @ok="loadRecommendInfo"
+          @cancel="hideRecommendPop"></recommend-item>
     </pop>
   </div>
 </template>
@@ -93,11 +131,14 @@ import api_recommend from "@/apis/api_recommend";
 import business from "@/utils/business";
 import Pop from "@components/public/pop";
 import ImageTable from "@components/admin/components/imageTable";
+import {recommendItemColumns} from "@/mapField/columns";
+import RecommendItem from "@components/admin/components/recommendItem";
 export default {
   name: "recommend",
-  components: {ImageTable, Pop, tableLayout, RoundTitle},
+  components: {RecommendItem, ImageTable, Pop, tableLayout, RoundTitle},
   data(){
     return {
+      recommendItemColumns,
       labelCol: { span: 4 },
       wrapperCol: { span: 16 },
       form: {
@@ -117,37 +158,92 @@ export default {
           {required:'true',message:'排序'}
         ],
       },
+      recommendId: '',
       imgShow: false,
       imgLoading: false,
+      recommendData:{},
+      loading: false,
+      recommendItemShow: false,
+      recommendItemLoading: false,
+      flightId: null,
+      zIndex: null,
+      img: null,
+      flightData: {}
     }
   },
-  mounted(){
-
+  async mounted(){
+    if(!this.$route.query.recommendId){
+      this.$message.warn('无推荐信息');
+      return this.$router.push('/recommends')
+    }
+    this.loading = true;
+    this.recommendId = this.$route.query.recommendId;
+    await this.loadRecommendInfo();
+    this.loading = false;
   },
   methods:{
+    async loadRecommendInfo(){
+      this.loading = true;
+      this.hideRecommendPop();
+      this.initItem();
+      let [err,response] = await handle(api_recommend.recommendInfo(this.recommendId));
+      console.log(response);
+      let {ok,msg,res} = business.checkResponseRcode(response,err);
+      this.loading = false;
+      if(!ok){return this.$message.error(msg)}
+      this.recommendData = res.data;
+      this.form.recommendName = res.data.recommendName;
+      this.form.discript = res.data.discript;
+      this.form.zIndex = res.data.zIndex;
+      this.form.imgUrl = res.data.bg;
+    },
+    initItem(){
+      this.flightId = null;
+      this.img = null;
+      this.zIndex = null;
+      this.flightData = null;
+    },
     // 重置表单
     resetForm(){
-      this.form.recommendName = '';
-      this.form.discript = '';
-      this.form.zIndex = 1;
-      this.form.imgUrl = '';
+      this.form.recommendName = this.recommendData.recommendName;
+      this.form.discript =this.recommendData.discript;
+      this.form.zIndex = this.recommendData.zIndex;
+      this.form.imgUrl = this.recommendData.bg;
     },
     async submitHandle(e) {
-      let recommendName = this.form.recommendName;
-      let discript = this.form.discript;
-      let zIndex = this.form.zIndex;
-      let imgUrl = this.form.imgUrl;
-      let [err,response] = await handle(api_recommend.addRecommend(recommendName,discript,zIndex,imgUrl));
-      console.log(response);
-      let rcodeMean = business.checkResponseRcode(response,err);
-      if(rcodeMean.ok){
-        // 登陆成功
-        this.$message.success(`编辑活动成功`);
-        this.countDown();
-      }else{
-        this.$message.error('添加活动失败')
-        this.$message[rcodeMean.type](rcodeMean.msg);
+      let changeParam = {};
+      let b = false;
+      if(this.form.imgUrl != this.recommendData.bg){
+        b=true;
+        changeParam.bg = this.form.imgUrl
       }
+
+      if(this.form.recommendName != this.recommendData.recommendName){
+        b=true;
+        changeParam.recommendName = this.form.recommendName
+      }
+      if(this.form.discript != this.recommendData.discript){
+        b=true;
+        changeParam.discript = this.form.discript
+      }
+      if(this.form.zIndex != this.recommendData.zIndex){
+        b=true;
+        changeParam.zIndex = this.form.zIndex
+      }
+
+      if(!b){
+        return this.$message.warn('没有修改项')
+      }
+      let [err,response] = await handle(api_recommend.changeRecommend(this.recommendId,changeParam));
+      console.log(response);
+      let {ok,msg,res} = business.checkResponseRcode(response,err);
+      if(!ok){
+        // 登陆成功
+        this.$message.error(`编辑活动失败`);
+        this.$message.error(msg);
+        return;
+      }
+      this.$message.success(`编辑活动成功`);
     },
     // 新增成功
     countDown() {
@@ -177,6 +273,36 @@ export default {
       this.imgShow = true;
       this.imgLoading = false;
     },
+    showRecommendPop(){
+      this.recommendItemShow = true;
+      this.recommendItemLoading = false;
+    },
+    hideRecommendPop(){
+      this.initItem();
+      this.recommendItemShow = false;
+      this.recommendItemLoading = false;
+    },
+    // 新增航班
+    addItem(){
+      this.initItem();
+      this.showRecommendPop()
+    },
+    // 编辑项目
+    editItem(record){
+      console.log(record);
+      this.flightId =record.flightId;
+      this.img =record.img;
+      this.zIndex =record.zIndex;
+      this.flightData = record;
+      this.showRecommendPop()
+    },
+    // 删除项目
+    async deleteItem(flightId){
+      let [err,response] = await handle(api_recommend.deleteRecommendFlight(this.recommendId,flightId));
+      let {ok,msg,res} = business.checkResponseRcode(response,err);
+      if(!ok){return this.$message.error(msg)}
+      await this.loadRecommendInfo();
+    }
 
   }
 }
