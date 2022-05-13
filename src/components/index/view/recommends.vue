@@ -8,7 +8,9 @@
         >
           <div class="recommend-title">
             <img :src="recommend.bg" :alt="recommend.recommendName">
-            <span>{{recommend.recommendName}}</span>
+            <air-link  :path="`/recommend?recommendId=${recommend.id}`">
+              <span>{{recommend.recommendName}}</span>
+            </air-link>
           </div>
           <!--        列表-->
           <div class="recommend-list">
@@ -33,7 +35,8 @@
                   <span class="price">￥{{item.currentPrice}}起</span>
                 </div>
                 <div class="info2 mt">
-                  <span class="se-time"><span>{{moment((item.sailingTime-0)*1000).format('YY-MM-DD')}}</span>去<span>{{moment((item.langdinTime-0)*1000).format('YY-MM-DD')}}</span>回</span>
+                  <span class="se-time"><span>{{moment((item.sailingTime-0)*1000).format('YY-MM-DD')}}</span>
+                    去<span>{{moment((item.langdinTime-0)*1000).format('YY-MM-DD')}}</span>回</span>
                 </div>
               </div>
             </router-link>
@@ -50,8 +53,10 @@ import api_recommend from "@/apis/api_recommend";
 import handle from "@/utils/handle";
 import api_city from "@/apis/api_city";
 import business from "@/utils/business";
+import AirLink from "@components/public/airLink";
 export default {
   name: "recommends",
+  components: {AirLink},
   data(){
     return {
       recommends:[]

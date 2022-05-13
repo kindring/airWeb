@@ -10,7 +10,9 @@
       >
         <div class="recommend-title">
           <img :src="recommend.bg" :alt="recommend.recommendName">
-         <span>{{recommend.recommendName}}</span>
+          <air-link  :path="`/recommend?recommendId=${recommend.id}`">
+            <span>{{recommend.recommendName}}</span>
+          </air-link>
         </div>
 <!--        列表-->
         <div class="recommend-list">
@@ -51,8 +53,10 @@ import api_recommend from "@/apis/api_recommend";
 import handle from "@/utils/handle";
 import api_city from "@/apis/api_city";
 import business from "@/utils/business";
+import AirLink from "@components/public/airLink";
 export default {
   name: "recommend",
+  components: {AirLink},
   data(){
     return {
       img: process.env.BASE_URL+'image/addr/丽江.jpg',

@@ -49,21 +49,21 @@ export default {
     return {
       banners:[{
         id: '1',
-        url:'http://',
+        url:'#/recommends',
         title: '特价机票',
-        text: '很长一段文字',
+        text: '由我们AIR-Z精心为你准备的,一系列便宜,好用的机票',
         img:process.env.BASE_URL+'image/banner/01.jpg'
       },{
         id: '2',
-        url:'http://',
-        title: '马尔代夫一日游',
-        text: '很长一段文字',
+        url:'#/recommend?recommendId=2',
+        title: '快乐美好时光',
+        text: '由我们AIR-Z精心为您的周末推荐的一系列线路,出门去看看风景,看看祖国的大好河山,领略不同名族的风土人情',
         img:process.env.BASE_URL+'image/banner/img.jpg'
       },{
         id: '3',
         url:'http://',
         title: '埃及之春',
-        text: '很长一段文字',
+        text: '前往四大文明古国之一的去游览世界各地的风貌',
         img:process.env.BASE_URL+'image/banner/a1.png'
       }],
       bannerIndex:0,

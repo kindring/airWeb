@@ -31,16 +31,16 @@ export default {
   data() {
     return {
       sidebar: [
-        {
-          text: '页面管理',
-          router: '/',
-          child: [
-            {
-              text: '轮播管理',
-              router: '/catur'
-            }
-          ]
-        },
+        // {
+        //   text: '页面管理',
+        //   router: '/',
+        //   child: [
+        //     {
+        //       text: '轮播管理',
+        //       router: '/catur'
+        //     }
+        //   ]
+        // },
         {
           text: '城市管理',
           router: '/citys',

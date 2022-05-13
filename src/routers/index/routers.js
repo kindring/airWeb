@@ -7,6 +7,7 @@ import orders from '@components/index/view/orders';
 import order from '@components/index/view/order'
 import buy from '@components/index/view/buy'
 import recommends from '@components/index/view/recommends'
+import recommend from '@components/index/view/recommend'
 const routers = [{
     id: '/',
     text: '首页',
@@ -87,6 +88,15 @@ const routers = [{
         name: '推荐',
         meta:{title:"推荐"},
         component: recommends,
+    },
+    {
+        id: '/recommend',
+        text: '推荐详情',
+        is_menu: true,
+        path: '/recommend',
+        name: '推荐详情',
+        meta:{title:"推荐详情"},
+        component: recommend,
     },
 ]
 
